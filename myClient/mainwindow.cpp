@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
         connect(socket,SIGNAL(disconnected()),this,SLOT(sockDisc()));
         ui->amplitude_Slider->setRange(1,50);
         ui->amplitude_Slider->setValue(10);
+        ui->speed_Slider->setRange(100000,1000000);
+        ui->speed_Slider->setValue(500000);
         h = 0.1;
         xBegin = 0;
         xEnd = 5;
@@ -40,17 +42,16 @@ void MainWindow::sockDisc()
 
 void MainWindow::sockReady()
 {
-    amplitude=ui->amplitude_Slider->value();
     ui->widget->setInteraction(QCP::iRangeDrag, false);
     ui->widget->setInteraction(QCP::iRangeZoom, false);
     Data = socket->readAll();
     double ordinate = QVariant(Data).toDouble();
     qDebug() << ordinate;
-    y.push_back(ordinate*amplitude*0.1);
+    y.push_back(ordinate);
     x.push_back(time);
     if(time*10<=50){
         xview.push_back(time);
-        yview.push_back(ordinate*amplitude*0.1);
+        yview.push_back(ordinate);
     }
     else{
         for(int i=0;i<50;++i){
@@ -58,10 +59,22 @@ void MainWindow::sockReady()
             yview.swapItemsAt(i,i+1);
         }
         xview[49]=time;
-        yview[49]=ordinate*amplitude*0.1;
+        yview[49]=ordinate;
     }
 
     time+=h;
+    massiv.push_back(time);
+    massiv.push_back(ui->amplitude_Slider->value());
+    massiv.push_back(ui->speed_Slider->value());
+
+    QDataStream out(&Data,QIODevice::WriteOnly);
+    out << massiv;
+
+    socket->write(Data);
+    socket->waitForBytesWritten();
+
+    massiv.clear();
+
     ui->widget->clearGraphs();
     if(time<=5){
         ui->widget->xAxis->setRange(xBegin,xEnd);
@@ -72,7 +85,7 @@ void MainWindow::sockReady()
         ui->widget->replot();
     }
     else{
-        ui->widget->xAxis->setRange(xBegin+time-5-5,xEnd+time-5+5);
+        ui->widget->xAxis->setRange(xBegin+time-5,xEnd+time-5);
         ui->widget->yAxis->setRange(-5,5);
 
         ui->widget->addGraph();
@@ -83,11 +96,20 @@ void MainWindow::sockReady()
 
 void MainWindow::on_pushButton_clicked()
 {
-    if(time==-1){
+    if(time==0){
         socket->connectToHost("127.0.0.1",6000);
-        socket->write(QByteArray::fromStdString(QVariant(time).toString().toStdString()));
+        massiv.push_back(time);
+        massiv.push_back(ui->amplitude_Slider->value());
+        massiv.push_back(ui->speed_Slider->value());
+
+        QDataStream out(&Data,QIODevice::WriteOnly);
+        out << massiv;
+
+        socket->write(Data);
         socket->waitForBytesWritten();
-        time = 0;
+
+        massiv.clear();
+
     }
     else{
         socket->connectToHost("127.0.0.1",6000);
@@ -98,21 +120,37 @@ void MainWindow::on_pushButton_clicked()
         int n = pmbx->exec();
 
         if(n==QMessageBox::Yes){
-            socket->write(QByteArray::fromStdString(QVariant(time).toString().toStdString()));
+            massiv.push_back(time);
+            massiv.push_back(ui->amplitude_Slider->value());
+            massiv.push_back(ui->speed_Slider->value());
+
+            QDataStream out(&Data,QIODevice::WriteOnly);
+            out << massiv;
+
+            socket->write(Data);
             socket->waitForBytesWritten();
+
+            massiv.clear();
             delete pmbx;
         }
         else if(n==QMessageBox::No){
-            time=-1;
-            socket->connectToHost("127.0.0.1",6000);
-            socket->write(QByteArray::fromStdString(QVariant(time).toString().toStdString()));
+            time=0;
+            massiv.push_back(time);
+            massiv.push_back(ui->amplitude_Slider->value());
+            massiv.push_back(ui->speed_Slider->value());
+
+            QDataStream out(&Data,QIODevice::WriteOnly);
+            out << massiv;
+
+            socket->write(Data);
             socket->waitForBytesWritten();
+
+            massiv.clear();
             delete pmbx;
             x.clear();
             y.clear();
             xview.clear();
             yview.clear();
-            time = 0;
         }
         else delete pmbx;
 

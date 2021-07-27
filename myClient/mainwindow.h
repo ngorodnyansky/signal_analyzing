@@ -18,7 +18,8 @@ public:
 
     QTcpSocket* socket;
     QByteArray Data;
-    double xBegin=0, xEnd=0, h=0, X=0, time=-1,amplitude=1;
+    QVector<double> massiv;
+    double xBegin=0, xEnd=0, h=0, X=0, time=0,amplitude=1;
     QVector<double> x,y,xview,yview;
 
 public slots:
