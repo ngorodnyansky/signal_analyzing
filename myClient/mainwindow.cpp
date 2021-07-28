@@ -42,6 +42,7 @@ void MainWindow::sockDisc()
 
 void MainWindow::sockReady()
 {
+    QColor color(r,g,b);
     ui->widget->setInteraction(QCP::iRangeDrag, false);
     ui->widget->setInteraction(QCP::iRangeZoom, false);
     Data = socket->readAll();
@@ -81,6 +82,7 @@ void MainWindow::sockReady()
         ui->widget->yAxis->setRange(-5,5);
 
         ui->widget->addGraph();
+        ui->widget->graph(0)->setPen(QPen(color,size));
         ui->widget->graph(0)->addData(xview,yview);
         ui->widget->replot();
     }
@@ -89,6 +91,7 @@ void MainWindow::sockReady()
         ui->widget->yAxis->setRange(-5,5);
 
         ui->widget->addGraph();
+        ui->widget->graph(0)->setPen(QPen(color,size));
         ui->widget->graph(0)->addData(xview,yview);
         ui->widget->replot();
     }
@@ -159,6 +162,7 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_3_clicked()
 {
+    QColor color(r,g,b);
     ui->widget->setInteraction(QCP::iRangeDrag, true);
     ui->widget->setInteraction(QCP::iRangeZoom, true);
 
@@ -166,8 +170,73 @@ void MainWindow::on_pushButton_3_clicked()
     ui->widget->yAxis->setRange(-5,5);
 
     ui->widget->addGraph();
+    ui->widget->graph(0)->setPen(QPen(color,size));
     ui->widget->graph(0)->addData(x,y);
     ui->widget->replot();
     socket->disconnectFromHost();
+}
+
+
+
+
+void MainWindow::on_green_colout_triggered()
+{
+    r=0;
+    g=255;
+    b=0;
+}
+
+
+void MainWindow::on_black_colour_triggered()
+{
+    r=0;
+    g=0;
+    b=0;
+}
+
+
+void MainWindow::on_blue_colour_triggered()
+{
+    r=0;
+    g=200;
+    b=255;
+}
+
+
+void MainWindow::on_red_colour_triggered()
+{
+    r=255;
+    g=0;
+    b=0;
+}
+
+
+void MainWindow::on_size_1_triggered()
+{
+    size=1;
+}
+
+
+void MainWindow::on_size_2_triggered()
+{
+    size=2;
+}
+
+
+void MainWindow::on_size_3_triggered()
+{
+    size=3;
+}
+
+
+void MainWindow::on_size_4_triggered()
+{
+    size=4;
+}
+
+
+void MainWindow::on_size_5_triggered()
+{
+    size=5;
 }
 
