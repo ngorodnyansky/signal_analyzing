@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
         connect(socket,SIGNAL(disconnected()),this,SLOT(sockDisc()));
         ui->amplitude_Slider->setRange(1,50);
         ui->amplitude_Slider->setValue(10);
-        ui->speed_Slider->setRange(100000,1000000);
-        ui->speed_Slider->setValue(500000);
+        ui->speed_Slider->setRange(400000,1030000);
+        ui->speed_Slider->setValue(800000);
         h = 0.1;
         xBegin = 0;
         xEnd = 5;
@@ -176,67 +176,25 @@ void MainWindow::on_pushButton_3_clicked()
     socket->disconnectFromHost();
 }
 
-
-
-
-void MainWindow::on_green_colout_triggered()
+void MainWindow::on_action_triggered()
 {
-    r=0;
-    g=255;
-    b=0;
+    setting_window.setModal(true);
+    setting_window.exec();
+    r=setting_window.red;
+    g=setting_window.blue;
+    b=setting_window.blue;
+    size=setting_window.size_line;
+    bgc=setting_window.background_color;
+    if(bgc==1){
+        ui->widget->setBackground(Qt::white);
+    }
+    else if(bgc==2){
+        ui->widget->setBackground(Qt::gray);
+    }
+    else if(bgc==3){
+        ui->widget->setBackground(Qt::red);
+    }
+    else ui->widget->setBackground(Qt::blue);
 }
 
-
-void MainWindow::on_black_colour_triggered()
-{
-    r=0;
-    g=0;
-    b=0;
-}
-
-
-void MainWindow::on_blue_colour_triggered()
-{
-    r=0;
-    g=200;
-    b=255;
-}
-
-
-void MainWindow::on_red_colour_triggered()
-{
-    r=255;
-    g=0;
-    b=0;
-}
-
-
-void MainWindow::on_size_1_triggered()
-{
-    size=1;
-}
-
-
-void MainWindow::on_size_2_triggered()
-{
-    size=2;
-}
-
-
-void MainWindow::on_size_3_triggered()
-{
-    size=3;
-}
-
-
-void MainWindow::on_size_4_triggered()
-{
-    size=4;
-}
-
-
-void MainWindow::on_size_5_triggered()
-{
-    size=5;
-}
 
