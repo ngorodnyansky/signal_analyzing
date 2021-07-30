@@ -20,8 +20,8 @@ public slots:
     void slotClientDisconnected();
 
 private:
-    QTcpServer * mTcpServer;
-    QTcpSocket * mTcpSocket;
+    QTcpServer * server;
+    QTcpSocket * socket;
 };
 
 

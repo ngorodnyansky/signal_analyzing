@@ -66,7 +66,7 @@
      <string>Скорость</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="connectButton">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -79,7 +79,7 @@
      <string>Соедениться с сервером</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="disconnectButton">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -116,12 +116,12 @@
     <property name="title">
      <string>Настройки</string>
     </property>
-    <addaction name="action"/>
+    <addaction name="SettingAction"/>
    </widget>
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action">
+  <action name="SettingAction">
    <property name="text">
     <string>Изменение внешнего вида</string>
    </property>

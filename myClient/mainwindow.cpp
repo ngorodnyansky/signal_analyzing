@@ -44,7 +44,7 @@ void MainWindow::sockDisc()
 
 void MainWindow::sockReady()
 {
-    QColor color(r,g,b);
+    QColor color(setting_window.red,setting_window.green,setting_window.blue);
     ui->widget->setInteraction(QCP::iRangeDrag, false);
     ui->widget->setInteraction(QCP::iRangeZoom, false);
     Data = socket->readAll();
@@ -84,10 +84,10 @@ void MainWindow::sockReady()
         ui->widget->yAxis->setRange(-5,5);
 
         ui->widget->addGraph();
-        ui->widget->graph(0)->setPen(QPen(color,size));
+        ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
         ui->widget->graph(0)->addData(xview,yview);
 
-        if(!analiasing)
+        if(!setting_window.antialiasing)
             ui->widget->graph(0)->setAntialiased(false);
 
         ui->widget->replot();
@@ -97,17 +97,17 @@ void MainWindow::sockReady()
         ui->widget->yAxis->setRange(-5,5);
 
         ui->widget->addGraph();
-        ui->widget->graph(0)->setPen(QPen(color,size));
+        ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
         ui->widget->graph(0)->addData(xview,yview);
 
-        if(!analiasing)
+        if(!setting_window.antialiasing)
             ui->widget->graph(0)->setAntialiased(false);
 
         ui->widget->replot();
     }
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_connectButton_clicked()
 {
     if(time==0){
         socket->connectToHost("127.0.0.1",6000);
@@ -170,9 +170,9 @@ void MainWindow::on_pushButton_clicked()
     }
 }
 
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::on_disconnectButton_clicked()
 {
-    QColor color(r,g,b);
+    QColor color(setting_window.red,setting_window.green,setting_window.blue);
     ui->widget->setInteraction(QCP::iRangeDrag, true);
     ui->widget->setInteraction(QCP::iRangeZoom, true);
 
@@ -180,36 +180,35 @@ void MainWindow::on_pushButton_3_clicked()
     ui->widget->yAxis->setRange(-5,5);
 
     ui->widget->addGraph();
-    ui->widget->graph(0)->setPen(QPen(color,size));
+    ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
     ui->widget->graph(0)->addData(x,y);
 
-    if(!analiasing)
+    if(!setting_window.antialiasing)
         ui->widget->graph(0)->setAntialiased(false);
 
     ui->widget->replot();
     socket->disconnectFromHost();
 }
 
-void MainWindow::on_action_triggered()
+void MainWindow::on_SettingAction_triggered()
 {
     setting_window.setModal(true);
     setting_window.exec();
-    r=setting_window.red;
-    g=setting_window.blue;
-    b=setting_window.blue;
-    size=setting_window.size_line;
-    analiasing=setting_window.antialiasing;
-    bgc=setting_window.background_color;
-    if(bgc==1){
+    if(setting_window.background_color==1){
         ui->widget->setBackground(Qt::white);
     }
-    else if(bgc==2){
+    else if(setting_window.background_color==2){
         ui->widget->setBackground(Qt::gray);
     }
-    else if(bgc==3){
+    else if(setting_window.background_color==3){
         ui->widget->setBackground(Qt::red);
     }
     else ui->widget->setBackground(Qt::blue);
 }
+
+
+
+
+
 
 

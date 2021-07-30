@@ -5,11 +5,11 @@
 
 MyTcpServer::MyTcpServer(QObject *parent) : QObject(parent)
 {
-    mTcpServer = new QTcpServer(this);
+    server = new QTcpServer(this);
 
-    connect(mTcpServer, &QTcpServer::newConnection, this, &MyTcpServer::slotNewConnection);
+    connect(server, &QTcpServer::newConnection, this, &MyTcpServer::slotNewConnection);
 
-    if(!mTcpServer->listen(QHostAddress::Any, 6000)){
+    if(!server->listen(QHostAddress::Any, 6000)){
         qDebug() << "server is not started";
     } else {
         qDebug() << "server is started";
@@ -17,16 +17,16 @@ MyTcpServer::MyTcpServer(QObject *parent) : QObject(parent)
 }
 void MyTcpServer::slotNewConnection()
 {
-    mTcpSocket = mTcpServer->nextPendingConnection();
-    connect(mTcpSocket, &QTcpSocket::readyRead, this, &MyTcpServer::slotServerRead);
-    connect(mTcpSocket, &QTcpSocket::disconnected, this, &MyTcpServer::slotClientDisconnected);
+    socket = server->nextPendingConnection();
+    connect(socket, &QTcpSocket::readyRead, this, &MyTcpServer::slotServerRead);
+    connect(socket, &QTcpSocket::disconnected, this, &MyTcpServer::slotClientDisconnected);
 
 }
 
 void MyTcpServer::slotServerRead()
 {
     QVector<double> array;
-    QDataStream in(mTcpSocket);
+    QDataStream in(socket);
     in >> array;
     amplitude=array[1]*0.1;
     speed=1100000-array[2];
@@ -36,11 +36,11 @@ void MyTcpServer::slotServerRead()
             X-=6.3;
         }
     }
-    bool connected = (mTcpSocket->state() == QTcpSocket::ConnectedState);
+    bool connected = (socket->state() == QTcpSocket::ConnectedState);
     if(connected){
     data=amplitude*sin(X);
-    mTcpSocket->write(QByteArray::fromStdString(QVariant(data).toString().toStdString()));
-    mTcpSocket->waitForBytesWritten();
+    socket->write(QByteArray::fromStdString(QVariant(data).toString().toStdString()));
+    socket->waitForBytesWritten();
     qDebug() << data;
     QThread::currentThread()->usleep(speed);
     }
@@ -48,5 +48,5 @@ void MyTcpServer::slotServerRead()
 
 void MyTcpServer::slotClientDisconnected()
 {
-    mTcpSocket->close();
+    socket->close();
 }
