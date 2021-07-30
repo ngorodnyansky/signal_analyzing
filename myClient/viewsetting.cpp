@@ -9,6 +9,7 @@ viewSetting::viewSetting(QWidget *parent) :
     ui->setupUi(this);
     ui->dark_radioButton->setChecked(true);
     ui->whiteBackgroundRadioButton->setChecked(true);
+    ui->antialiasing_acheckBox->setChecked(true);
     ui->size_spinBox->setRange(1,5);
     ui->size_spinBox->setValue(1);
 }
@@ -57,6 +58,9 @@ void viewSetting::on_apply_clicked()
     }
     else background_color=4;
     size_line=ui->size_spinBox->value();
+    if(!ui->antialiasing_acheckBox->isChecked())
+        antialiasing = 0;
+    else antialiasing = 1;
     this->close();
 }
 

@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     socket = new QTcpSocket(this);
+
         connect(socket,SIGNAL(readyRead()),this,SLOT(sockReady()));
         connect(socket,SIGNAL(disconnected()),this,SLOT(sockDisc()));
         ui->amplitude_Slider->setRange(1,50);
@@ -20,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
         ui->widget->xAxis->setRange(xBegin,xEnd);
         ui->widget->yAxis->setRange(-5,5);
+
 
 }
 
@@ -84,6 +86,10 @@ void MainWindow::sockReady()
         ui->widget->addGraph();
         ui->widget->graph(0)->setPen(QPen(color,size));
         ui->widget->graph(0)->addData(xview,yview);
+
+        if(!analiasing)
+            ui->widget->graph(0)->setAntialiased(false);
+
         ui->widget->replot();
     }
     else{
@@ -93,6 +99,10 @@ void MainWindow::sockReady()
         ui->widget->addGraph();
         ui->widget->graph(0)->setPen(QPen(color,size));
         ui->widget->graph(0)->addData(xview,yview);
+
+        if(!analiasing)
+            ui->widget->graph(0)->setAntialiased(false);
+
         ui->widget->replot();
     }
 }
@@ -172,6 +182,10 @@ void MainWindow::on_pushButton_3_clicked()
     ui->widget->addGraph();
     ui->widget->graph(0)->setPen(QPen(color,size));
     ui->widget->graph(0)->addData(x,y);
+
+    if(!analiasing)
+        ui->widget->graph(0)->setAntialiased(false);
+
     ui->widget->replot();
     socket->disconnectFromHost();
 }
@@ -184,6 +198,7 @@ void MainWindow::on_action_triggered()
     g=setting_window.blue;
     b=setting_window.blue;
     size=setting_window.size_line;
+    analiasing=setting_window.antialiasing;
     bgc=setting_window.background_color;
     if(bgc==1){
         ui->widget->setBackground(Qt::white);
