@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QCoreApplication>
 #include <QThread>
+#include <cmath>
 
 MyTcpServer::MyTcpServer(QObject *parent) : QObject(parent)
 {
@@ -29,20 +30,17 @@ void MyTcpServer::slotServerRead()
     QDataStream in(socket);
     in >> array;
     amplitude=array[1]*0.1;
-    speed=1100000-array[2];
+    speed=array[2];
     double xBegin=array[0], X=xBegin, data=0;
-    if(X>6.3){
-        while(X>6.3){
-            X-=6.3;
-        }
+    if(X==6.28){
+        X=0;
     }
     bool connected = (socket->state() == QTcpSocket::ConnectedState);
     if(connected){
-    data=amplitude*sin(X);
+    data=amplitude*sin(X*0.2*3.1415*speed);
     socket->write(QByteArray::fromStdString(QVariant(data).toString().toStdString()));
     socket->waitForBytesWritten();
-    qDebug() << data;
-    QThread::currentThread()->usleep(speed);
+    QThread::currentThread()->usleep(50000);
     }
 }
 

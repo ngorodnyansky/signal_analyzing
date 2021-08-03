@@ -12,10 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
         connect(socket,SIGNAL(readyRead()),this,SLOT(sockReady()));
         connect(socket,SIGNAL(disconnected()),this,SLOT(sockDisc()));
         ui->amplitude_Slider->setRange(1,50);
-        ui->amplitude_Slider->setValue(10);
-        ui->speed_Slider->setRange(400000,1030000);
-        ui->speed_Slider->setValue(800000);
-        h = 0.1;
+        ui->amplitude_Slider->setValue(20);
+        ui->speed_Slider->setRange(5,50);
+        ui->speed_Slider->setValue(10);
         xBegin = 0;
         xEnd = 5;
 
@@ -49,20 +48,19 @@ void MainWindow::sockReady()
     ui->widget->setInteraction(QCP::iRangeZoom, false);
     Data = socket->readAll();
     double ordinate = QVariant(Data).toDouble();
-    qDebug() << ordinate;
     y.push_back(ordinate);
     x.push_back(time);
-    if(time*10<=50){
+    if(time*10<=5/h){
         xview.push_back(time);
         yview.push_back(ordinate);
     }
     else{
-        for(int i=0;i<50;++i){
+        for(int i=0;i<5/h;++i){
             xview.swapItemsAt(i,i+1);
             yview.swapItemsAt(i,i+1);
         }
-        xview[49]=time;
-        yview[49]=ordinate;
+        xview[5/h-1]=time;
+        yview[5/h-1]=ordinate;
     }
 
     time+=h;

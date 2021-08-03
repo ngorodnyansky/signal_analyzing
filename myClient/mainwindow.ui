@@ -63,7 +63,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Скорость</string>
+     <string>Частота</string>
     </property>
    </widget>
    <widget class="QPushButton" name="connectButton">
