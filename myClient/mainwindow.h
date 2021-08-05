@@ -21,7 +21,8 @@ public:
     QByteArray Data;
     QVector<double> massiv;
     double xBegin=0, xEnd=0, h=0.01, X=0, time=0,amplitude=1;
-    QVector<double> x,y,xview,yview;
+    QVector<double> x,y,xview,yview, extremums_x, extremums_y;
+
 
 public slots:
     void sockReady();

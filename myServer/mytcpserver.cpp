@@ -37,7 +37,7 @@ void MyTcpServer::slotServerRead()
     }
     bool connected = (socket->state() == QTcpSocket::ConnectedState);
     if(connected){
-    data=amplitude*sin(X*0.2*3.1415*speed);
+    data=amplitude*sin(X*0.2*3.14159265*speed);
     socket->write(QByteArray::fromStdString(QVariant(data).toString().toStdString()));
     socket->waitForBytesWritten();
     QThread::currentThread()->usleep(50000);

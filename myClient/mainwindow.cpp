@@ -13,15 +13,13 @@ MainWindow::MainWindow(QWidget *parent) :
         connect(socket,SIGNAL(disconnected()),this,SLOT(sockDisc()));
         ui->amplitude_Slider->setRange(1,50);
         ui->amplitude_Slider->setValue(20);
-        ui->speed_Slider->setRange(5,50);
-        ui->speed_Slider->setValue(10);
+        ui->frequency_Slider->setRange(5,40);
+        ui->frequency_Slider->setValue(10);
         xBegin = 0;
         xEnd = 5;
 
         ui->widget->xAxis->setRange(xBegin,xEnd);
         ui->widget->yAxis->setRange(-5,5);
-
-
 }
 
 MainWindow::~MainWindow()
@@ -48,6 +46,7 @@ void MainWindow::sockReady()
     ui->widget->setInteraction(QCP::iRangeZoom, false);
     Data = socket->readAll();
     double ordinate = QVariant(Data).toDouble();
+    qDebug() << ordinate;
     y.push_back(ordinate);
     x.push_back(time);
     if(time*10<=5/h){
@@ -63,10 +62,19 @@ void MainWindow::sockReady()
         yview[5/h-1]=ordinate;
     }
 
+    if(time!=0){
+        int n = x.size();
+        if(abs(y[n-1]-y[n-2])/0.01<0.17){
+            extremums_x.push_back(time-0.01);
+            extremums_y.push_back(amplitude*y[n-2]);
+        }
+
+    }
+
     time+=h;
     massiv.push_back(time);
     massiv.push_back(ui->amplitude_Slider->value());
-    massiv.push_back(ui->speed_Slider->value());
+    massiv.push_back(ui->frequency_Slider->value());
 
     QDataStream out(&Data,QIODevice::WriteOnly);
     out << massiv;
@@ -85,8 +93,18 @@ void MainWindow::sockReady()
         ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
         ui->widget->graph(0)->addData(xview,yview);
 
+
+
+
         if(!setting_window.antialiasing)
             ui->widget->graph(0)->setAntialiased(false);
+
+        ui->widget->addGraph();
+        ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 4));
+        ui->widget->graph(1)->setPen(QColor(50, 50, 50, 255));
+        ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
+        ui->widget->graph(1)->addData(extremums_x,extremums_y);
+
 
         ui->widget->replot();
     }
@@ -101,8 +119,19 @@ void MainWindow::sockReady()
         if(!setting_window.antialiasing)
             ui->widget->graph(0)->setAntialiased(false);
 
+
+        ui->widget->addGraph();
+        ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 4));
+        ui->widget->graph(1)->setPen(QColor(50, 50, 50, 255));
+        ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
+        ui->widget->graph(1)->addData(extremums_x,extremums_y);
+
         ui->widget->replot();
     }
+
+
+
+
 }
 
 void MainWindow::on_connectButton_clicked()
@@ -111,7 +140,7 @@ void MainWindow::on_connectButton_clicked()
         socket->connectToHost("127.0.0.1",6000);
         massiv.push_back(time);
         massiv.push_back(ui->amplitude_Slider->value());
-        massiv.push_back(ui->speed_Slider->value());
+        massiv.push_back(ui->frequency_Slider->value());
 
         QDataStream out(&Data,QIODevice::WriteOnly);
         out << massiv;
@@ -133,7 +162,7 @@ void MainWindow::on_connectButton_clicked()
         if(n==QMessageBox::Yes){
             massiv.push_back(time);
             massiv.push_back(ui->amplitude_Slider->value());
-            massiv.push_back(ui->speed_Slider->value());
+            massiv.push_back(ui->frequency_Slider->value());
 
             QDataStream out(&Data,QIODevice::WriteOnly);
             out << massiv;
@@ -148,7 +177,7 @@ void MainWindow::on_connectButton_clicked()
             time=0;
             massiv.push_back(time);
             massiv.push_back(ui->amplitude_Slider->value());
-            massiv.push_back(ui->speed_Slider->value());
+            massiv.push_back(ui->frequency_Slider->value());
 
             QDataStream out(&Data,QIODevice::WriteOnly);
             out << massiv;
