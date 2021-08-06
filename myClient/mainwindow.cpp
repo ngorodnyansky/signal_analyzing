@@ -61,20 +61,20 @@ void MainWindow::sockReady()
         xview[5/h-1]=time;
         yview[5/h-1]=ordinate;
     }
-    if(time>0.03){
+    if(time>0.01){
         int n = x.size();
-        if(((y[n-4]-y[n-3])/0.01>0 && (y[n-2]-y[n-1])/0.01<0) || ((y[n-4]-y[n-3])/0.01<0 && (y[n-2]-y[n-1])/0.01>0)){
-            extremums_x.push_back(time-0.02);
-            extremums_y.push_back(amplitude*y[n-3]);
-            extremums_xview.push_back(time-0.02);
-            extremums_yview.push_back(amplitude*y[n-3]);
+        if(((y[n-3]-y[n-2])/0.01>0 && (y[n-2]-y[n-1])/0.01<0) || ((y[n-3]-y[n-2])/0.01<0 && (y[n-2]-y[n-1])/0.01>0)){
+            extremums_x.push_back(time-0.01);
+            extremums_y.push_back(amplitude*y[n-2]);
+            extremums_xview.push_back(time-0.01);
+            extremums_yview.push_back(amplitude*y[n-2]);
             if(extremums_xview.size()==5/h){
                 for(int i=0;i<5/h;++i){
                    extremums_xview.swapItemsAt(i,i+1);
                     extremums_yview.swapItemsAt(i,i+1);
                 }
-                extremums_xview[5/h-1]=time-0.02;
-                extremums_yview[5/h-1]=amplitude*y[n-3];
+                extremums_xview[5/h-1]=time-0.01;
+                extremums_yview[5/h-1]=amplitude*y[n-2];
             }
         }
     }
