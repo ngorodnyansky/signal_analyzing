@@ -63,8 +63,8 @@ void MainWindow::sockReady()
     }
 
     if(time!=0){
-        int n = x.size();
-        if(abs(y[n-1]-y[n-2])/0.01<0.17){
+        int n = x.size(), j = ui->frequency_Slider->value();
+        if(abs(y[n-1]-y[n-2])/0.01<0.15*j){
             extremums_x.push_back(time-0.01);
             extremums_y.push_back(amplitude*y[n-2]);
         }
