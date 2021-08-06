@@ -46,7 +46,6 @@ void MainWindow::sockReady()
     ui->widget->setInteraction(QCP::iRangeZoom, false);
     Data = socket->readAll();
     double ordinate = QVariant(Data).toDouble();
-    qDebug() << ordinate;
     y.push_back(ordinate);
     x.push_back(time);
     if(time*10<=5/h){
