@@ -61,14 +61,22 @@ void MainWindow::sockReady()
         xview[5/h-1]=time;
         yview[5/h-1]=ordinate;
     }
-
-    if(time!=0){
-        int n = x.size(), j = ui->frequency_Slider->value();
-        if(abs(y[n-1]-y[n-2])/0.01<0.15*j){
-            extremums_x.push_back(time-0.01);
-            extremums_y.push_back(amplitude*y[n-2]);
+    if(time>0.03){
+        int n = x.size();
+        if(((y[n-4]-y[n-3])/0.01>0 && (y[n-2]-y[n-1])/0.01<0) || ((y[n-4]-y[n-3])/0.01<0 && (y[n-2]-y[n-1])/0.01>0)){
+            extremums_x.push_back(time-0.02);
+            extremums_y.push_back(amplitude*y[n-3]);
+            extremums_xview.push_back(time-0.02);
+            extremums_yview.push_back(amplitude*y[n-3]);
+            if(extremums_xview.size()==5/h){
+                for(int i=0;i<5/h;++i){
+                   extremums_xview.swapItemsAt(i,i+1);
+                    extremums_yview.swapItemsAt(i,i+1);
+                }
+                extremums_xview[5/h-1]=time-0.02;
+                extremums_yview[5/h-1]=amplitude*y[n-3];
+            }
         }
-
     }
 
     time+=h;
@@ -100,7 +108,7 @@ void MainWindow::sockReady()
             ui->widget->graph(0)->setAntialiased(false);
 
         ui->widget->addGraph();
-        ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 4));
+        ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 6));
         ui->widget->graph(1)->setPen(QColor(50, 50, 50, 255));
         ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
         ui->widget->graph(1)->addData(extremums_x,extremums_y);
@@ -191,6 +199,10 @@ void MainWindow::on_connectButton_clicked()
             y.clear();
             xview.clear();
             yview.clear();
+            extremums_yview.clear();
+            extremums_xview.clear();
+            extremums_y.clear();
+            extremums_x.clear();
         }
         else delete pmbx;
 
@@ -212,6 +224,13 @@ void MainWindow::on_disconnectButton_clicked()
 
     if(!setting_window.antialiasing)
         ui->widget->graph(0)->setAntialiased(false);
+
+
+    ui->widget->addGraph();
+    ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 6));
+    ui->widget->graph(1)->setPen(QColor(50, 50, 50, 255));
+    ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
+    ui->widget->graph(1)->addData(extremums_xview,extremums_yview);
 
     ui->widget->replot();
     socket->disconnectFromHost();
