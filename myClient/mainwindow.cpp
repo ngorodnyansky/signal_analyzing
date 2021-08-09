@@ -48,32 +48,34 @@ void MainWindow::sockReady()
     double ordinate = QVariant(Data).toDouble();
     y.push_back(ordinate);
     x.push_back(time);
-    if(time*10<=5/h){
+    if(time*10<=area_limit){
         xview.push_back(time);
         yview.push_back(ordinate);
     }
     else{
-        for(int i=0;i<5/h;++i){
+        for(int i=0;i<area_limit;++i){
             xview.swapItemsAt(i,i+1);
             yview.swapItemsAt(i,i+1);
         }
-        xview[5/h-1]=time;
-        yview[5/h-1]=ordinate;
+        int k=xview.size();
+        xview[k-1]=time;
+        yview[k-1]=ordinate;
     }
-    if(time>0.01){
-        int n = x.size();
+    int n = y.size();
+    if(n>=3){
         if(((y[n-3]-y[n-2])/0.01>0 && (y[n-2]-y[n-1])/0.01<0) || ((y[n-3]-y[n-2])/0.01<0 && (y[n-2]-y[n-1])/0.01>0)){
             extremums_x.push_back(time-0.01);
             extremums_y.push_back(amplitude*y[n-2]);
             extremums_xview.push_back(time-0.01);
             extremums_yview.push_back(amplitude*y[n-2]);
-            if(extremums_xview.size()==5/h){
-                for(int i=0;i<5/h;++i){
+            if(extremums_xview.size()==area_limit){
+                for(int i=0;i<area_limit;++i){
                    extremums_xview.swapItemsAt(i,i+1);
                     extremums_yview.swapItemsAt(i,i+1);
                 }
-                extremums_xview[5/h-1]=time-0.01;
-                extremums_yview[5/h-1]=amplitude*y[n-2];
+                int j = extremums_xview.size();
+                extremums_xview[j-1]=time-0.01;
+                extremums_yview[j-1]=amplitude*y[n-2];
             }
         }
     }
