@@ -41,7 +41,8 @@ void MainWindow::sockDisc()
 
 void MainWindow::sockReady()
 {
-    QColor color(setting_window.red,setting_window.green,setting_window.blue);
+    QColor lineColor(setting_window.red,setting_window.green,setting_window.blue);
+    QColor pointsColor(setting_window.redPoints,setting_window.greenPoints,setting_window.bluePoints);
     ui->widget->setInteraction(QCP::iRangeDrag, false);
     ui->widget->setInteraction(QCP::iRangeZoom, false);
     Data = socket->readAll();
@@ -99,7 +100,7 @@ void MainWindow::sockReady()
         ui->widget->yAxis->setRange(-5,5);
 
         ui->widget->addGraph();
-        ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
+        ui->widget->graph(0)->setPen(QPen(lineColor,setting_window.size_line));
         ui->widget->graph(0)->addData(xview,yview);
 
 
@@ -107,12 +108,13 @@ void MainWindow::sockReady()
 
         if(!setting_window.antialiasing)
             ui->widget->graph(0)->setAntialiased(false);
-
-        ui->widget->addGraph();
-        ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 6));
-        ui->widget->graph(1)->setPen(QColor(50, 50, 50, 255));
-        ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-        ui->widget->graph(1)->addData(extremums_x,extremums_y);
+        if(setting_window.viewPoints){
+            ui->widget->addGraph();
+            ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
+            ui->widget->graph(1)->setPen(pointsColor);
+            ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
+            ui->widget->graph(1)->addData(extremums_x,extremums_y);
+        }
 
 
         ui->widget->replot();
@@ -122,19 +124,19 @@ void MainWindow::sockReady()
         ui->widget->yAxis->setRange(-5,5);
 
         ui->widget->addGraph();
-        ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
+        ui->widget->graph(0)->setPen(QPen(lineColor,setting_window.size_line));
         ui->widget->graph(0)->addData(xview,yview);
 
         if(!setting_window.antialiasing)
             ui->widget->graph(0)->setAntialiased(false);
 
-
-        ui->widget->addGraph();
-        ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 4));
-        ui->widget->graph(1)->setPen(QColor(50, 50, 50, 255));
-        ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-        ui->widget->graph(1)->addData(extremums_x,extremums_y);
-
+        if(setting_window.viewPoints){
+            ui->widget->addGraph();
+            ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
+            ui->widget->graph(1)->setPen(pointsColor);
+            ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
+            ui->widget->graph(1)->addData(extremums_x,extremums_y);
+        }
         ui->widget->replot();
     }
 
@@ -225,13 +227,15 @@ void MainWindow::on_disconnectButton_clicked()
 
     if(!setting_window.antialiasing)
         ui->widget->graph(0)->setAntialiased(false);
+    if(setting_window.viewPoints){
+        QColor pointsColor(setting_window.redPoints,setting_window.greenPoints,setting_window.bluePoints);
+        ui->widget->addGraph();
+        ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
+        ui->widget->graph(1)->setPen(pointsColor);
+        ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
+        ui->widget->graph(1)->addData(extremums_xview,extremums_yview);
+    }
 
-
-    ui->widget->addGraph();
-    ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 6));
-    ui->widget->graph(1)->setPen(QColor(50, 50, 50, 255));
-    ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-    ui->widget->graph(1)->addData(extremums_xview,extremums_yview);
 
     ui->widget->replot();
     socket->disconnectFromHost();
