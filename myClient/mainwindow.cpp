@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
         connect(socket,SIGNAL(readyRead()),this,SLOT(sockReady()));
         connect(socket,SIGNAL(disconnected()),this,SLOT(sockDisc()));
+
         ui->amplitude_Slider->setRange(1,50);
         ui->amplitude_Slider->setValue(20);
         ui->frequency_Slider->setRange(5,40);
@@ -20,6 +21,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
         ui->widget->xAxis->setRange(xBegin,xEnd);
         ui->widget->yAxis->setRange(-5,5);
+
+        if(setting_window.background_color==1){
+            ui->widget->setBackground(Qt::white);
+        }
+        else if(setting_window.background_color==2){
+            ui->widget->setBackground(Qt::gray);
+        }
+        else if(setting_window.background_color==3){
+            ui->widget->setBackground(Qt::red);
+        }
+        else ui->widget->setBackground(Qt::blue);
+
+
 }
 
 MainWindow::~MainWindow()
@@ -49,7 +63,7 @@ void MainWindow::sockReady()
     double ordinate = QVariant(Data).toDouble();
     y.push_back(ordinate);
     x.push_back(time);
-    if(time*10<=area_limit){
+    if(time*100<=area_limit){
         xview.push_back(time);
         yview.push_back(ordinate);
     }
@@ -256,6 +270,14 @@ void MainWindow::on_SettingAction_triggered()
     }
     else ui->widget->setBackground(Qt::blue);
 }
+
+void MainWindow::on_action_exit_triggered()
+{
+    this->close();
+}
+
+
+
 
 
 

@@ -17,6 +17,7 @@ public:
     int red=0, green=0, blue=0, size_line=1, background_color=1;
     int redPoints=0, greenPoints=0, bluePoints=0, size_points=4;
     bool antialiasing=1, viewPoints=1;
+    QVector<double> settings;
 
 private slots:
     void on_cancel_clicked();

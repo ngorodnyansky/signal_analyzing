@@ -118,12 +118,24 @@
     </property>
     <addaction name="SettingAction"/>
    </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="action_exit"/>
+   </widget>
+   <addaction name="menu_2"/>
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="SettingAction">
    <property name="text">
     <string>Изменение внешнего вида</string>
+   </property>
+  </action>
+  <action name="action_exit">
+   <property name="text">
+    <string>Выйти</string>
    </property>
   </action>
  </widget>
