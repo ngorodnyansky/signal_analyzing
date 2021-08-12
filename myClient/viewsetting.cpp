@@ -4,32 +4,11 @@
 #include <QFile>
 viewSetting::viewSetting(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::viewSetting)
+    settings("settings.ini", QSettings::IniFormat), ui(new Ui::viewSetting)
 {
     ui->setupUi(this);
 
-    settings.clear();
-    QFile file(QCoreApplication::applicationDirPath() + "settings.bin");
-    if(file.open(QIODevice::ReadOnly)){
-        QDataStream stream(&file);
-        stream >> settings;
-        if(stream.status() != QDataStream::Ok){
-            qDebug() << "Ошибка чтения файлы с настройками";
-        }
-    }
-    file.close();
-    red=settings[0];
-    green=settings[1];
-    blue = settings[2];
-    size_line = settings[3];
-    redPoints = settings[4];
-    greenPoints = settings[5];
-    bluePoints = settings[6];
-    size_points = settings[7];
-    background_color = settings[8];
-    antialiasing = settings[9];
-    viewPoints = settings[10];
-    settings.clear();
+    readSettings();
 
     if(red==green==blue==0)
         ui->dark_radioButton->setChecked(true);
@@ -71,8 +50,46 @@ viewSetting::viewSetting(QWidget *parent) :
 
 }
 
+void viewSetting::readSettings(){
+    settings.beginGroup("/Settings");
+
+    red = settings.value("/redColorLine",0).toInt();
+    green = settings.value("/greenColorLine",0).toInt();
+    blue = settings.value("/blueColorLine",0).toInt();
+    size_line = settings.value("/sizeLine",1).toInt();
+    antialiasing = settings.value("/antialiasing",1).toBool();
+    redPoints = settings.value("/redPointsColorLine",0).toInt();
+    greenPoints = settings.value("/greenPointsColorLine",0).toInt();
+    bluePoints = settings.value("/bluePointsColorLine",0).toInt();
+    size_points = settings.value("/sizePoints",4).toInt();
+    viewPoints = settings.value("/pointsView",1).toBool();
+    background_color = settings.value("/backgroundColor",1).toInt();
+
+    settings.endGroup();
+}
+
+void viewSetting::writeSettings(){
+    settings.beginGroup("/Settings");
+
+    settings.setValue("/redColorLine",red);
+    settings.setValue("/greenColorLine",green);
+    settings.setValue("/blueColorLine",blue);
+    settings.setValue("/sizeLine",size_line);
+    settings.setValue("/antialiasing",antialiasing);
+    settings.setValue("/redPointsColorLine",redPoints);
+    settings.setValue("/greenPointsColorLine",greenPoints);
+    settings.setValue("/bluePointsColorLine",bluePoints);
+    settings.setValue("/sizePoints",size_points);
+    settings.setValue("/pointsView",viewPoints);
+    settings.setValue("/antialiasing",antialiasing);
+    settings.setValue("/backgroundColor",background_color);
+
+    settings.endGroup();
+}
+
 viewSetting::~viewSetting()
 {
+    writeSettings();
     delete ui;
 }
 
@@ -80,6 +97,7 @@ void viewSetting::on_cancel_clicked()
 {
     this->close();
 }
+
 
 
 void viewSetting::on_apply_clicked()
@@ -150,32 +168,6 @@ void viewSetting::on_apply_clicked()
     }
     else viewPoints=1;
 
-
-    settings.clear();
-    settings.push_back(red);
-    settings.push_back(green);
-    settings.push_back(blue);
-    settings.push_back(size_line);
-    settings.push_back(redPoints);
-    settings.push_back(greenPoints);
-    settings.push_back(bluePoints);
-    settings.push_back(size_points);
-    settings.push_back(background_color);
-    settings.push_back(antialiasing);
-    settings.push_back(viewPoints);
-    QFile file(QCoreApplication::applicationDirPath() + "settings.bin");
-    if(file.open(QIODevice::WriteOnly)){
-        QDataStream stream(&file);
-        stream<<settings;
-        if(stream.status() != QDataStream::Ok){
-            qDebug() << "Ошибка записи";
-        }
-    }
-    file.close();
-    for(int i=0; i<settings.size();i++){
-        qDebug() << settings[i];
-    }
-    settings.clear();
     this->close();
 }
 
