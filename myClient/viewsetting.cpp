@@ -8,6 +8,16 @@ viewSetting::viewSetting(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    updateValue();
+}
+
+
+viewSetting::~viewSetting()
+{
+    delete ui;
+}
+
+void viewSetting::updateValue(){
     if(red==green==blue==0)
         ui->dark_radioButton->setChecked(true);
     else if(red==255 && green == 0 && blue == 0)
@@ -45,13 +55,6 @@ viewSetting::viewSetting(QWidget *parent) :
     ui->size_spinBox->setValue(size_line);
     ui->pointsSize_spinBox->setRange(1,10);
     ui->pointsSize_spinBox->setValue(size_points);
-
-}
-
-
-viewSetting::~viewSetting()
-{
-    delete ui;
 }
 
 void viewSetting::on_cancel_clicked()

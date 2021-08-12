@@ -2,53 +2,30 @@
 <ui version="4.0">
  <class>viewSetting</class>
  <widget class="QDialog" name="viewSetting">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>393</width>
-    <height>354</height>
+    <width>338</width>
+    <height>236</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QWidget" name="gridLayoutWidget">
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>260</y>
-     <width>168</width>
-     <height>80</height>
+     <x>9</x>
+     <y>9</y>
+     <width>69</width>
+     <height>115</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="1">
-     <widget class="QPushButton" name="cancel">
-      <property name="text">
-       <string>Отмена</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QPushButton" name="apply">
-      <property name="text">
-       <string>Применить</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="verticalLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>20</y>
-     <width>101</width>
-     <height>131</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
@@ -86,45 +63,16 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="verticalLayoutWidget_2">
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>160</y>
-     <width>111</width>
-     <height>81</height>
+     <x>84</x>
+     <y>9</y>
+     <width>71</width>
+     <height>115</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
-    <item>
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Толщина линии(1-5)</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QSpinBox" name="size_spinBox"/>
-    </item>
-    <item>
-     <widget class="QCheckBox" name="antialiasing_acheckBox">
-      <property name="text">
-       <string>Сглаживание</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="verticalLayoutWidget_3">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>20</y>
-     <width>86</width>
-     <height>141</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
      <widget class="QLabel" name="label_3">
       <property name="text">
@@ -162,16 +110,16 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="verticalLayoutWidget_4">
+  <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>30</y>
-     <width>131</width>
-     <height>188</height>
+     <x>186</x>
+     <y>9</y>
+     <width>71</width>
+     <height>115</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout_4">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QLabel" name="label_4">
       <property name="text">
@@ -207,24 +155,105 @@
       </property>
      </widget>
     </item>
-    <item>
-     <widget class="QLabel" name="label_5">
-      <property name="text">
-       <string>Размер точек(1-10)</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QSpinBox" name="pointsSize_spinBox"/>
-    </item>
-    <item>
-     <widget class="QCheckBox" name="viewPoints_checkBox">
-      <property name="text">
-       <string>Показывать точки</string>
-      </property>
-     </widget>
-    </item>
    </layout>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>130</y>
+     <width>102</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Толщина линии(1-5)</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>134</x>
+     <y>130</y>
+     <width>98</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Размер точек(1-10)</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="size_spinBox">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>153</y>
+     <width>39</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="pointsSize_spinBox">
+   <property name="geometry">
+    <rect>
+     <x>134</x>
+     <y>153</y>
+     <width>39</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="antialiasing_acheckBox">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>182</y>
+     <width>93</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Сглаживание</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="viewPoints_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>134</x>
+     <y>182</y>
+     <width>120</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Показывать точки</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="apply">
+   <property name="geometry">
+    <rect>
+     <x>134</x>
+     <y>207</y>
+     <width>80</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Применить</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="cancel">
+   <property name="geometry">
+    <rect>
+     <x>238</x>
+     <y>207</y>
+     <width>80</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Отмена</string>
+   </property>
   </widget>
  </widget>
  <resources/>

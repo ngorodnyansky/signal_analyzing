@@ -34,13 +34,8 @@ private slots:
     void on_disconnectButton_clicked();
     void readSettings();
     void writeSettings();
-
-
-
     void on_SettingAction_triggered();
-
     void on_action_exit_triggered();
-
 private:
     viewSetting setting_window;
     Ui::MainWindow *ui;
