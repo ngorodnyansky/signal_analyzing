@@ -20,10 +20,10 @@ public:
     QTcpSocket* socket;
     QByteArray Data;
     QVector<double> massiv;
-    double xBegin=0, xEnd=0, h=0.01, X=0, time=0,amplitude=1;
+    double xBegin=0, xEnd=0, h=0.01, X=0, time=0,amplitude=20,frequency=10;
     int area_limit=5/h;
     QVector<double> x,y,xview,yview, extremums_x, extremums_y, extremums_xview, extremums_yview;
-
+    QSettings settings;
 
 public slots:
     void sockReady();
@@ -32,6 +32,8 @@ public slots:
 private slots:
     void on_connectButton_clicked();
     void on_disconnectButton_clicked();
+    void readSettings();
+    void writeSettings();
 
 
 

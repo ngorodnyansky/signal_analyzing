@@ -4,11 +4,9 @@
 #include <QFile>
 viewSetting::viewSetting(QWidget *parent) :
     QDialog(parent),
-    settings("settings.ini", QSettings::IniFormat), ui(new Ui::viewSetting)
+    ui(new Ui::viewSetting)
 {
     ui->setupUi(this);
-
-    readSettings();
 
     if(red==green==blue==0)
         ui->dark_radioButton->setChecked(true);
@@ -50,46 +48,9 @@ viewSetting::viewSetting(QWidget *parent) :
 
 }
 
-void viewSetting::readSettings(){
-    settings.beginGroup("/Settings");
-
-    red = settings.value("/redColorLine",0).toInt();
-    green = settings.value("/greenColorLine",0).toInt();
-    blue = settings.value("/blueColorLine",0).toInt();
-    size_line = settings.value("/sizeLine",1).toInt();
-    antialiasing = settings.value("/antialiasing",1).toBool();
-    redPoints = settings.value("/redPointsColorLine",0).toInt();
-    greenPoints = settings.value("/greenPointsColorLine",0).toInt();
-    bluePoints = settings.value("/bluePointsColorLine",0).toInt();
-    size_points = settings.value("/sizePoints",4).toInt();
-    viewPoints = settings.value("/pointsView",1).toBool();
-    background_color = settings.value("/backgroundColor",1).toInt();
-
-    settings.endGroup();
-}
-
-void viewSetting::writeSettings(){
-    settings.beginGroup("/Settings");
-
-    settings.setValue("/redColorLine",red);
-    settings.setValue("/greenColorLine",green);
-    settings.setValue("/blueColorLine",blue);
-    settings.setValue("/sizeLine",size_line);
-    settings.setValue("/antialiasing",antialiasing);
-    settings.setValue("/redPointsColorLine",redPoints);
-    settings.setValue("/greenPointsColorLine",greenPoints);
-    settings.setValue("/bluePointsColorLine",bluePoints);
-    settings.setValue("/sizePoints",size_points);
-    settings.setValue("/pointsView",viewPoints);
-    settings.setValue("/antialiasing",antialiasing);
-    settings.setValue("/backgroundColor",background_color);
-
-    settings.endGroup();
-}
 
 viewSetting::~viewSetting()
 {
-    writeSettings();
     delete ui;
 }
 
@@ -170,4 +131,3 @@ void viewSetting::on_apply_clicked()
 
     this->close();
 }
-

@@ -3,7 +3,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+     settings("settings.ini", QSettings::IniFormat), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
@@ -11,11 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
         connect(socket,SIGNAL(readyRead()),this,SLOT(sockReady()));
         connect(socket,SIGNAL(disconnected()),this,SLOT(sockDisc()));
-
+        readSettings();
         ui->amplitude_Slider->setRange(1,50);
-        ui->amplitude_Slider->setValue(20);
+        ui->amplitude_Slider->setValue(amplitude);
         ui->frequency_Slider->setRange(5,40);
-        ui->frequency_Slider->setValue(10);
+        ui->frequency_Slider->setValue(frequency);
         xBegin = 0;
         xEnd = 5;
 
@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    writeSettings();
     delete ui;
 }
 
@@ -80,9 +81,9 @@ void MainWindow::sockReady()
     if(n>=3){
         if(((y[n-3]-y[n-2])/0.01>0 && (y[n-2]-y[n-1])/0.01<0) || ((y[n-3]-y[n-2])/0.01<0 && (y[n-2]-y[n-1])/0.01>0)){
             extremums_x.push_back(time-0.01);
-            extremums_y.push_back(amplitude*y[n-2]);
+            extremums_y.push_back(y[n-2]);
             extremums_xview.push_back(time-0.01);
-            extremums_yview.push_back(amplitude*y[n-2]);
+            extremums_yview.push_back(y[n-2]);
             if(extremums_xview.size()==area_limit){
                 for(int i=0;i<area_limit;++i){
                    extremums_xview.swapItemsAt(i,i+1);
@@ -90,15 +91,18 @@ void MainWindow::sockReady()
                 }
                 int j = extremums_xview.size();
                 extremums_xview[j-1]=time-0.01;
-                extremums_yview[j-1]=amplitude*y[n-2];
+                extremums_yview[j-1]=y[n-2];
             }
         }
     }
 
     time+=h;
+    amplitude = ui->amplitude_Slider->value();
+    frequency = ui->frequency_Slider->value();
+
     massiv.push_back(time);
-    massiv.push_back(ui->amplitude_Slider->value());
-    massiv.push_back(ui->frequency_Slider->value());
+    massiv.push_back(amplitude);
+    massiv.push_back(frequency);
 
     QDataStream out(&Data,QIODevice::WriteOnly);
     out << massiv;
@@ -276,12 +280,43 @@ void MainWindow::on_action_exit_triggered()
     this->close();
 }
 
+void MainWindow::readSettings(){
+    settings.beginGroup("/Settings");
 
+    setting_window.red = settings.value("/redColorLine",0).toInt();
+    setting_window.green = settings.value("/greenColorLine",0).toInt();
+    setting_window.blue = settings.value("/blueColorLine",0).toInt();
+    setting_window.size_line = settings.value("/sizeLine",1).toInt();
+    setting_window.antialiasing = settings.value("/antialiasing",1).toBool();
+    setting_window.redPoints = settings.value("/redPointsColorLine",0).toInt();
+    setting_window.greenPoints = settings.value("/greenPointsColorLine",0).toInt();
+    setting_window.bluePoints = settings.value("/bluePointsColorLine",0).toInt();
+    setting_window.size_points = settings.value("/sizePoints",4).toInt();
+    setting_window.viewPoints = settings.value("/pointsView",1).toBool();
+    setting_window.background_color = settings.value("/backgroundColor",1).toInt();
+    amplitude = settings.value("/Amplitude", 20).toDouble();
+    frequency = settings.value("/Frequency", 10).toDouble();
 
+    settings.endGroup();
+}
 
+void MainWindow::writeSettings(){
+    settings.beginGroup("/Settings");
 
+    settings.setValue("/redColorLine",setting_window.red);
+    settings.setValue("/greenColorLine",setting_window.green);
+    settings.setValue("/blueColorLine",setting_window.blue);
+    settings.setValue("/sizeLine",setting_window.size_line);
+    settings.setValue("/antialiasing",setting_window.antialiasing);
+    settings.setValue("/redPointsColorLine",setting_window.redPoints);
+    settings.setValue("/greenPointsColorLine",setting_window.greenPoints);
+    settings.setValue("/bluePointsColorLine",setting_window.bluePoints);
+    settings.setValue("/sizePoints",setting_window.size_points);
+    settings.setValue("/pointsView",setting_window.viewPoints);
+    settings.setValue("/antialiasing",setting_window.antialiasing);
+    settings.setValue("/backgroundColor",setting_window.background_color);
+    settings.setValue("/Amplitude", amplitude);
+    settings.setValue("/Frequency", frequency);
 
-
-
-
-
+    settings.endGroup();
+}
