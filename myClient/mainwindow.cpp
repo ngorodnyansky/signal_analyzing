@@ -262,6 +262,7 @@ void MainWindow::on_disconnectButton_clicked()
 void MainWindow::on_SettingAction_triggered()
 {
     setting_window.setModal(true);
+    setting_window.updateValue();
     setting_window.exec();
     if(setting_window.background_color==1){
         ui->widget->setBackground(Qt::white);

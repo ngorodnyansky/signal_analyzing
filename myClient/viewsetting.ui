@@ -9,252 +9,228 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>338</width>
-    <height>236</height>
+    <width>332</width>
+    <height>339</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QWidget" name="">
-   <property name="geometry">
-    <rect>
-     <x>9</x>
-     <y>9</y>
-     <width>69</width>
-     <height>115</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout_3">
-    <item>
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Цвет линии</string>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0" colspan="2">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Толщина линии(1-5)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="size_spinBox"/>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="antialiasing_acheckBox">
+       <property name="text">
+        <string>Сглаживание</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="2" colspan="2">
+    <layout class="QVBoxLayout" name="verticalLayout_5">
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Размер точек(1-10)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="pointsSize_spinBox"/>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="viewPoints_checkBox">
+       <property name="text">
+        <string>Показывать точки</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="3">
+    <widget class="QWidget" name="widget_2" native="true">
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>10</y>
+        <width>71</width>
+        <height>115</height>
+       </rect>
       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Цвет фона</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="whiteBackgroundRadioButton">
+         <property name="text">
+          <string>Белый</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="greyBackgroundRadioButton">
+         <property name="text">
+          <string>Серый</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="redBackgroundRadioButton">
+         <property name="text">
+          <string>Красный</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="blueBackgroundRadioButton">
+         <property name="text">
+          <string>Синий</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="dark_radioButton">
-      <property name="text">
-       <string>Чёрная</string>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QWidget" name="widget" native="true">
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>69</width>
+        <height>115</height>
+       </rect>
       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Цвет линии</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="dark_radioButton">
+         <property name="text">
+          <string>Чёрная</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="blue_radioButton">
+         <property name="text">
+          <string>Синяя</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="red_radioButton">
+         <property name="text">
+          <string>Красная</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="green_radioButton">
+         <property name="text">
+          <string>Зелёная</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="blue_radioButton">
-      <property name="text">
-       <string>Синяя</string>
+    </widget>
+   </item>
+   <item row="2" column="2" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QPushButton" name="apply">
+       <property name="text">
+        <string>Применить</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancel">
+       <property name="text">
+        <string>Отмена</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="2">
+    <widget class="QWidget" name="widget_3" native="true">
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>10</y>
+        <width>71</width>
+        <height>115</height>
+       </rect>
       </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Цвет точек</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="bluePoints_radioButton">
+         <property name="text">
+          <string>Голубые</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="redPoints_radioButton">
+         <property name="text">
+          <string>Красные</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="darkPoints_radioButton">
+         <property name="text">
+          <string>Чёрные</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="whitePoints_radioButton">
+         <property name="text">
+          <string>Белые</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="red_radioButton">
-      <property name="text">
-       <string>Красная</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="green_radioButton">
-      <property name="text">
-       <string>Зелёная</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="">
-   <property name="geometry">
-    <rect>
-     <x>84</x>
-     <y>9</y>
-     <width>71</width>
-     <height>115</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout_2">
-    <item>
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Цвет фона</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="whiteBackgroundRadioButton">
-      <property name="text">
-       <string>Белый</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="greyBackgroundRadioButton">
-      <property name="text">
-       <string>Серый</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="redBackgroundRadioButton">
-      <property name="text">
-       <string>Красный</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="blueBackgroundRadioButton">
-      <property name="text">
-       <string>Синий</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="">
-   <property name="geometry">
-    <rect>
-     <x>186</x>
-     <y>9</y>
-     <width>71</width>
-     <height>115</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QLabel" name="label_4">
-      <property name="text">
-       <string>Цвет точек</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="bluePoints_radioButton">
-      <property name="text">
-       <string>Голубые</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="redPoints_radioButton">
-      <property name="text">
-       <string>Красные</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="darkPoints_radioButton">
-      <property name="text">
-       <string>Чёрные</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QRadioButton" name="whitePoints_radioButton">
-      <property name="text">
-       <string>Белые</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>9</x>
-     <y>130</y>
-     <width>102</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Толщина линии(1-5)</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>134</x>
-     <y>130</y>
-     <width>98</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Размер точек(1-10)</string>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="size_spinBox">
-   <property name="geometry">
-    <rect>
-     <x>9</x>
-     <y>153</y>
-     <width>39</width>
-     <height>23</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="pointsSize_spinBox">
-   <property name="geometry">
-    <rect>
-     <x>134</x>
-     <y>153</y>
-     <width>39</width>
-     <height>23</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="antialiasing_acheckBox">
-   <property name="geometry">
-    <rect>
-     <x>9</x>
-     <y>182</y>
-     <width>93</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Сглаживание</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="viewPoints_checkBox">
-   <property name="geometry">
-    <rect>
-     <x>134</x>
-     <y>182</y>
-     <width>120</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Показывать точки</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="apply">
-   <property name="geometry">
-    <rect>
-     <x>134</x>
-     <y>207</y>
-     <width>80</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Применить</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="cancel">
-   <property name="geometry">
-    <rect>
-     <x>238</x>
-     <y>207</y>
-     <width>80</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Отмена</string>
-   </property>
-  </widget>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
