@@ -9,75 +9,123 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>332</width>
-    <height>339</height>
+    <width>327</width>
+    <height>262</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0" colspan="2">
-    <layout class="QVBoxLayout" name="verticalLayout_4">
-     <item>
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Толщина линии(1-5)</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSpinBox" name="size_spinBox"/>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="antialiasing_acheckBox">
-       <property name="text">
-        <string>Сглаживание</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="1" column="2" colspan="2">
-    <layout class="QVBoxLayout" name="verticalLayout_5">
-     <item>
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Размер точек(1-10)</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSpinBox" name="pointsSize_spinBox"/>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="viewPoints_checkBox">
-       <property name="text">
-        <string>Показывать точки</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="0" column="3">
-    <widget class="QWidget" name="widget_2" native="true">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Цвет линии</string>
+     </property>
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>10</y>
+        <x>0</x>
+        <y>20</y>
+        <width>69</width>
+        <height>115</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QRadioButton" name="dark_radioButton">
+         <property name="text">
+          <string>Чёрная</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="red_radioButton">
+         <property name="text">
+          <string>Красная</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="blue_radioButton">
+         <property name="text">
+          <string>Синяя</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="green_radioButton">
+         <property name="text">
+          <string>Зелёная</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Цает точек</string>
+     </property>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>20</y>
+        <width>71</width>
+        <height>115</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QRadioButton" name="bluePoints_radioButton">
+         <property name="text">
+          <string>Голубые</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="redPoints_radioButton">
+         <property name="text">
+          <string>Красные</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="darkPoints_radioButton">
+         <property name="text">
+          <string>Чёрные</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="whitePoints_radioButton">
+         <property name="text">
+          <string>Белые</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string>Цвет фона</string>
+     </property>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>20</y>
         <width>71</width>
         <height>115</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string>Цвет фона</string>
-         </property>
-        </widget>
-       </item>
        <item>
         <widget class="QRadioButton" name="whiteBackgroundRadioButton">
          <property name="text">
@@ -110,50 +158,57 @@
      </widget>
     </widget>
    </item>
-   <item row="0" column="0">
-    <widget class="QWidget" name="widget" native="true">
-     <widget class="QWidget" name="layoutWidget">
+   <item row="1" column="0" colspan="2">
+    <widget class="QGroupBox" name="groupBox_4">
+     <property name="title">
+      <string>Толщина линии(1-5)</string>
+     </property>
+     <widget class="QWidget" name="">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>69</width>
-        <height>115</height>
+        <x>0</x>
+        <y>20</y>
+        <width>104</width>
+        <height>51</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QSpinBox" name="size_spinBox"/>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="antialiasing_acheckBox">
          <property name="text">
-          <string>Цвет линии</string>
+          <string>Сглаживание</string>
          </property>
         </widget>
        </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="1" column="2" colspan="2">
+    <widget class="QGroupBox" name="groupBox_5">
+     <property name="title">
+      <string>Размер точек(1-10)</string>
+     </property>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>20</y>
+        <width>122</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
-        <widget class="QRadioButton" name="dark_radioButton">
-         <property name="text">
-          <string>Чёрная</string>
-         </property>
-        </widget>
+        <widget class="QSpinBox" name="pointsSize_spinBox"/>
        </item>
        <item>
-        <widget class="QRadioButton" name="blue_radioButton">
+        <widget class="QCheckBox" name="viewPoints_checkBox">
          <property name="text">
-          <string>Синяя</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="red_radioButton">
-         <property name="text">
-          <string>Красная</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="green_radioButton">
-         <property name="text">
-          <string>Зелёная</string>
+          <string>Показывать точки</string>
          </property>
         </widget>
        </item>
@@ -178,57 +233,6 @@
       </widget>
      </item>
     </layout>
-   </item>
-   <item row="0" column="2">
-    <widget class="QWidget" name="widget_3" native="true">
-     <widget class="QWidget" name="layoutWidget">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>10</y>
-        <width>71</width>
-        <height>115</height>
-       </rect>
-      </property>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Цвет точек</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="bluePoints_radioButton">
-         <property name="text">
-          <string>Голубые</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="redPoints_radioButton">
-         <property name="text">
-          <string>Красные</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="darkPoints_radioButton">
-         <property name="text">
-          <string>Чёрные</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QRadioButton" name="whitePoints_radioButton">
-         <property name="text">
-          <string>Белые</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
    </item>
   </layout>
  </widget>
