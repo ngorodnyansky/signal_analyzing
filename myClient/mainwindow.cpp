@@ -33,7 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
         }
         else ui->widget->setBackground(Qt::blue);
 
-
+        ui->disconnectButton->setEnabled(false);
+        ui->disconnectButton->repaint();
 }
 
 MainWindow::~MainWindow()
@@ -157,10 +158,6 @@ void MainWindow::sockReady()
         }
         ui->widget->replot();
     }
-
-
-
-
 }
 
 void MainWindow::on_connectButton_clicked()
@@ -178,6 +175,12 @@ void MainWindow::on_connectButton_clicked()
         socket->waitForBytesWritten();
 
         massiv.clear();
+
+        ui->connectButton->setEnabled(false);
+        ui->connectButton->repaint();
+
+        ui->disconnectButton->setEnabled(true);
+        ui->disconnectButton->repaint();
 
     }
     else{
@@ -201,6 +204,12 @@ void MainWindow::on_connectButton_clicked()
 
             massiv.clear();
             delete pmbx;
+
+            ui->connectButton->setEnabled(false);
+            ui->connectButton->repaint();
+
+            ui->disconnectButton->setEnabled(true);
+            ui->disconnectButton->repaint();
         }
         else if(n==QMessageBox::No){
             time=0;
@@ -224,6 +233,12 @@ void MainWindow::on_connectButton_clicked()
             extremums_xview.clear();
             extremums_y.clear();
             extremums_x.clear();
+
+            ui->connectButton->setEnabled(false);
+            ui->connectButton->repaint();
+
+            ui->disconnectButton->setEnabled(true);
+            ui->disconnectButton->repaint();
         }
         else delete pmbx;
 
@@ -257,6 +272,12 @@ void MainWindow::on_disconnectButton_clicked()
 
     ui->widget->replot();
     socket->disconnectFromHost();
+
+    ui->disconnectButton->setEnabled(false);
+    ui->disconnectButton->repaint();
+
+    ui->connectButton->setEnabled(true);
+    ui->connectButton->repaint();
 }
 
 void MainWindow::on_SettingAction_triggered()
