@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>327</width>
-    <height>262</height>
+    <height>377</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -163,7 +163,7 @@
      <property name="title">
       <string>Толщина линии(1-5)</string>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -192,7 +192,7 @@
      <property name="title">
       <string>Размер точек(1-10)</string>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>0</x>

@@ -36,6 +36,8 @@ private slots:
     void writeSettings();
     void on_SettingAction_triggered();
     void on_action_exit_triggered();
+    void on_action_save_triggered();
+
 private:
     viewSetting setting_window;
     Ui::MainWindow *ui;

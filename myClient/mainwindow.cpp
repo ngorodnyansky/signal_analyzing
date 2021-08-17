@@ -295,6 +295,7 @@ void MainWindow::on_SettingAction_triggered()
         ui->widget->setBackground(Qt::red);
     }
     else ui->widget->setBackground(Qt::blue);
+    ui->widget->replot();
 }
 
 void MainWindow::on_action_exit_triggered()
@@ -341,4 +342,36 @@ void MainWindow::writeSettings(){
     settings.setValue("/Frequency", frequency);
 
     settings.endGroup();
+}
+
+void MainWindow::on_action_save_triggered()
+{
+    if(time==0){
+        QMessageBox *pmbx = new QMessageBox(QMessageBox::Question,"MessageBox",
+                                            "График не должен быть пустым для сохранения!\n",
+                                            QMessageBox::Ok);
+        int n = pmbx->exec();
+        if(n==QMessageBox::Ok){
+           delete pmbx;
+        }
+    }
+    if(socket->state()== QTcpSocket::ConnectedState){
+        QMessageBox *pmbx = new QMessageBox(QMessageBox::Question,"MessageBox",
+                                            "Отключитесь от сервера для сохранения графика!\n",
+                                            QMessageBox::Ok);
+        int n = pmbx->exec();
+        if(n==QMessageBox::Ok){
+           delete pmbx;
+        }
+    }
+    QFile saveFile("saveGraph.txt");
+
+    if(!saveFile.open(QIODevice::WriteOnly)){
+        qDebug() << "Ошибка записи";
+    }
+
+    QDataStream out(&saveFile);
+
+    out << x;
+    saveFile.close();
 }
