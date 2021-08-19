@@ -355,7 +355,7 @@ void MainWindow::on_action_save_triggered()
            delete pmbx;
         }
     }
-    if(socket->state()== QTcpSocket::ConnectedState){
+    else if(socket->state()== QTcpSocket::ConnectedState){
         QMessageBox *pmbx = new QMessageBox(QMessageBox::Question,"MessageBox",
                                             "Отключитесь от сервера для сохранения графика!\n",
                                             QMessageBox::Ok);
@@ -364,14 +364,17 @@ void MainWindow::on_action_save_triggered()
            delete pmbx;
         }
     }
-    QFile saveFile("saveGraph.txt");
+    else {
+        QString str = QFileDialog::getSaveFileName(this,tr("Выбор папки"),"/home/untitled.txt",tr("* .txt"));
+        QFile saveFile(str + ".txt");
 
-    if(!saveFile.open(QIODevice::WriteOnly)){
-        qDebug() << "Ошибка записи";
+        if(!saveFile.open(QIODevice::WriteOnly)){
+           qDebug() << "Ошибка записи";
+        }
+
+     QDataStream out(&saveFile);
+
+        out << x;
+        saveFile.close();
     }
-
-    QDataStream out(&saveFile);
-
-    out << x;
-    saveFile.close();
 }
