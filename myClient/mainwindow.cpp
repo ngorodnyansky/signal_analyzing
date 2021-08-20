@@ -346,8 +346,9 @@ void MainWindow::writeSettings(){
 
 void MainWindow::on_action_save_triggered()
 {
+    QMessageBox *pmbx;
     if(time==0){
-        QMessageBox *pmbx = new QMessageBox(QMessageBox::Question,"MessageBox",
+        pmbx = new QMessageBox(QMessageBox::Question,"Ошибка",
                                             "График не должен быть пустым для сохранения!\n",
                                             QMessageBox::Ok);
         int n = pmbx->exec();
@@ -356,7 +357,7 @@ void MainWindow::on_action_save_triggered()
         }
     }
     else if(socket->state()== QTcpSocket::ConnectedState){
-        QMessageBox *pmbx = new QMessageBox(QMessageBox::Question,"MessageBox",
+        pmbx = new QMessageBox(QMessageBox::Question,"Ошибка",
                                             "Отключитесь от сервера для сохранения графика!\n",
                                             QMessageBox::Ok);
         int n = pmbx->exec();
@@ -365,16 +366,230 @@ void MainWindow::on_action_save_triggered()
         }
     }
     else {
-        QString str = QFileDialog::getSaveFileName(this,tr("Выбор папки"),"/home/untitled.txt",tr("* .txt"));
-        QFile saveFile(str + ".txt");
+        QString saveName = QFileDialog::getSaveFileName(this,tr("Выбор папки"),"/home/untitled.txt",tr("* .txt"));
+        QFile saveFile(saveName + ".txt");
 
         if(!saveFile.open(QIODevice::WriteOnly)){
-           qDebug() << "Ошибка записи";
+            pmbx = new QMessageBox(QMessageBox::Question,"Ошибка",
+                                                "Ошибка записи!\n",
+                                                QMessageBox::Ok);
+            int n = pmbx->exec();
+            if(n==QMessageBox::Ok){
+               delete pmbx;
+            }
         }
 
-     QDataStream out(&saveFile);
-
-        out << x;
-        saveFile.close();
+        QDataStream out(&saveFile);
+            out << y;
+            saveFile.close();
     }
 }
+
+void MainWindow::on_action_open_triggered()
+{
+    QMessageBox *pmbx;
+    if(socket->state()== QTcpSocket::ConnectedState){
+        pmbx = new QMessageBox(QMessageBox::Question,"Ошибка",
+                                            "Отключитесь от сервера для открытия графика!\n",
+                                            QMessageBox::Ok);
+        int n = pmbx->exec();
+        if(n==QMessageBox::Ok){
+           delete pmbx;
+        }
+    }
+    else if(time!=0){
+            pmbx = new QMessageBox(QMessageBox::Question,"Ошибка",
+                                                "При открытии графика существующий будет стёрт. Продолжить?\n",
+                                               QMessageBox::Ok | QMessageBox::Cancel);
+               int n = pmbx->exec();
+               if(n==QMessageBox::Ok){
+                  delete pmbx;
+                   QString fileName = QFileDialog::getOpenFileName(this,tr("Выбор файла"),"/untiled",tr("* .txt"));
+                   if(!fileName.isEmpty()){
+                       QFile openFile(fileName);
+
+                       if(!openFile.open(QIODevice::ReadOnly)){
+                       pmbx = new QMessageBox(QMessageBox::Question,"Ошибка",
+                                                           "Ошибка чтения!\n",
+                                                           QMessageBox::Ok);
+                           int n = pmbx->exec();
+                           if(n==QMessageBox::Ok){
+                           delete pmbx;
+                           }
+                       }
+
+                       x.clear();
+                       y.clear();
+                       xview.clear();
+                       yview.clear();
+                       extremums_yview.clear();
+                       extremums_xview.clear();
+                       extremums_y.clear();
+                       extremums_x.clear();
+
+
+                       QDataStream in(&openFile);
+                           in >> y;
+                           openFile.close();
+                       int size=y.size();
+                       for(int i=0;i<size;++i){
+                           x.push_back(h*i);
+                       }
+                       time = x[size-2];
+                       if(size>area_limit){
+                           for(int i=0;i<area_limit;++i){
+                               xview.push_back(x[size]-1-i);
+                               yview.push_back(y[size]-1-i);
+                           }
+                       }
+                       else{
+                           for(int i=0;i<size;++i){
+                               xview.push_back(x[i]);
+                               yview.push_back(y[i]);
+                           }
+                       }
+
+                       if(size>=3){
+                           for(int i=2;i<size;++i){
+                               if(((y[i]-y[i-1])/0.01>0 && (y[i-1]-y[i-2])/0.01<0) || ((y[i]-y[i-1])/0.01<0 && (y[i-1]-y[i-2])/0.01>0)){
+                                   extremums_x.push_back(x[i-1]);
+                                   extremums_y.push_back(y[i-1]);
+                                   extremums_xview.push_back(x[i-1]);
+                                   extremums_yview.push_back(y[i-1]);
+                                   if(extremums_xview.size()==area_limit){
+                                       for(int i=0;i<area_limit;++i){
+                                           extremums_xview.swapItemsAt(i,i+1);
+                                           extremums_yview.swapItemsAt(i,i+1);
+                                       }
+                                       int j = extremums_xview.size();
+                                       extremums_xview[j-1]=x[i-1];
+                                       extremums_yview[j-1]=y[i-1];
+                                   }
+                               }
+                           }
+                       }
+
+                       QColor color(setting_window.red,setting_window.green,setting_window.blue);
+                       ui->widget->clearGraphs();
+                       ui->widget->setInteraction(QCP::iRangeDrag, true);
+                       ui->widget->setInteraction(QCP::iRangeZoom, true);
+
+                       ui->widget->xAxis->setRange(xBegin+time-5,xEnd+time-5);
+                       ui->widget->yAxis->setRange(-5,5);
+
+                       ui->widget->addGraph();
+                       ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
+                       ui->widget->graph(0)->addData(x,y);
+
+                       if(!setting_window.antialiasing)
+                           ui->widget->graph(0)->setAntialiased(false);
+
+                       if(setting_window.viewPoints){
+                           QColor pointsColor(setting_window.redPoints,setting_window.greenPoints,setting_window.bluePoints);
+                           ui->widget->addGraph();
+                           ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
+                           ui->widget->graph(1)->setPen(pointsColor);
+                           ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
+                           ui->widget->graph(1)->addData(extremums_xview,extremums_yview);
+                       }
+
+                       ui->widget->replot();
+                }
+            }
+            if(n==QMessageBox::Cancel) delete pmbx;
+        }
+        else {
+        QString fileName = QFileDialog::getOpenFileName(this,tr("Выбор файла"),"/untiled",tr("* .txt"));
+        if(!fileName.isEmpty()){
+            QFile openFile(fileName);
+
+            if(!openFile.open(QIODevice::ReadOnly)){
+            pmbx = new QMessageBox(QMessageBox::Question,"Ошибка",
+                                                "Ошибка чтения!\n",
+                                                QMessageBox::Ok);
+                int n = pmbx->exec();
+                if(n==QMessageBox::Ok){
+                delete pmbx;
+                }
+            }
+
+            x.clear();
+            y.clear();
+            xview.clear();
+            yview.clear();
+            extremums_yview.clear();
+            extremums_xview.clear();
+            extremums_y.clear();
+            extremums_x.clear();
+
+
+            QDataStream in(&openFile);
+                in >> y;
+                openFile.close();
+            int size=y.size();
+            for(int i=0;i<size;++i){
+                x.push_back(h*i);
+            }
+            time = x[size-2];
+            if(size>area_limit){
+                for(int i=0;i<area_limit;++i){
+                    xview.push_back(x[size]-1-i);
+                    yview.push_back(y[size]-1-i);
+                }
+            }
+            else{
+                for(int i=0;i<size;++i){
+                    xview.push_back(x[i]);
+                    yview.push_back(y[i]);
+                }
+            }
+
+            if(size>=3){
+                for(int i=2;i<size;++i){
+                    if(((y[i]-y[i-1])/0.01>0 && (y[i-1]-y[i-2])/0.01<0) || ((y[i]-y[i-1])/0.01<0 && (y[i-1]-y[i-2])/0.01>0)){
+                        extremums_x.push_back(x[i-1]);
+                        extremums_y.push_back(y[i-1]);
+                        extremums_xview.push_back(x[i-1]);
+                        extremums_yview.push_back(y[i-1]);
+                        if(extremums_xview.size()==area_limit){
+                            for(int i=0;i<area_limit;++i){
+                                extremums_xview.swapItemsAt(i,i+1);
+                                extremums_yview.swapItemsAt(i,i+1);
+                            }
+                            int j = extremums_xview.size();
+                            extremums_xview[j-1]=x[i-1];
+                            extremums_yview[j-1]=y[i-1];
+                        }
+                    }
+                }
+            }
+
+            QColor color(setting_window.red,setting_window.green,setting_window.blue);
+            ui->widget->clearGraphs();
+            ui->widget->setInteraction(QCP::iRangeDrag, true);
+            ui->widget->setInteraction(QCP::iRangeZoom, true);
+
+            ui->widget->xAxis->setRange(xBegin+time-5,xEnd+time-5);
+            ui->widget->yAxis->setRange(-5,5);
+
+            ui->widget->addGraph();
+            ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
+            ui->widget->graph(0)->addData(x,y);
+
+            if(!setting_window.antialiasing)
+                ui->widget->graph(0)->setAntialiased(false);
+
+            if(setting_window.viewPoints){
+                QColor pointsColor(setting_window.redPoints,setting_window.greenPoints,setting_window.bluePoints);
+                ui->widget->addGraph();
+                ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
+                ui->widget->graph(1)->setPen(pointsColor);
+                ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
+                ui->widget->graph(1)->addData(extremums_xview,extremums_yview);
+            }
+
+            ui->widget->replot();
+        }
+    }
+}
+

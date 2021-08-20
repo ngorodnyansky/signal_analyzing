@@ -38,6 +38,8 @@ private slots:
     void on_action_exit_triggered();
     void on_action_save_triggered();
 
+    void on_action_open_triggered();
+
 private:
     viewSetting setting_window;
     Ui::MainWindow *ui;
