@@ -344,6 +344,24 @@ void MainWindow::writeSettings(){
     settings.endGroup();
 }
 
+
+struct graphData{
+    QVector<double> ordinate, abscissa, viewOrdinate, viewAbscissa;
+    QVector<double> pointOrdinate, pointAbscissa, viewPointOrdinate, viewPointAbscissa;
+    double saveTime=0, saveAmplitude=1,saveFrequency=1;
+};
+QDataStream &operator<<(QDataStream &out, const graphData &saveGraph){
+    out << saveGraph.ordinate << saveGraph.abscissa << saveGraph.viewOrdinate << saveGraph.viewAbscissa;
+    out << saveGraph.pointOrdinate << saveGraph.pointAbscissa << saveGraph.viewPointOrdinate << saveGraph.viewPointAbscissa;
+    out << saveGraph.saveTime << saveGraph.saveAmplitude << saveGraph.saveFrequency;
+    return out;
+}
+QDataStream &operator>>(QDataStream &in, graphData &openGraph){
+    in >> openGraph.ordinate >> openGraph.abscissa >> openGraph.viewOrdinate >> openGraph.viewAbscissa;
+    in >> openGraph.pointOrdinate >> openGraph.pointAbscissa >> openGraph.viewPointOrdinate >> openGraph.viewPointAbscissa;
+    in >> openGraph.saveTime >> openGraph.saveAmplitude >> openGraph.saveFrequency;
+    return in;
+};
 void MainWindow::on_action_save_triggered()
 {
     QMessageBox *pmbx;
@@ -378,15 +396,121 @@ void MainWindow::on_action_save_triggered()
                delete pmbx;
             }
         }
+        else{
+            graphData save;
+            for(int i=0;i<y.size();++i){
+                save.ordinate.push_back(y[i]);
+                save.abscissa.push_back(x[i]);
+            }
+            for(int i=0;i<yview.size();++i){
+                save.viewOrdinate.push_back(yview[i]);
+                save.viewAbscissa.push_back(xview[i]);
+            }
+            for(int i=0;i<extremums_y.size();++i){
+                save.pointOrdinate.push_back(extremums_y[i]);
+                save.pointAbscissa.push_back(extremums_x[i]);
+            }
+            for(int i=0;i<extremums_yview.size();++i){
+                save.viewPointOrdinate.push_back(extremums_yview[i]);
+                save.viewPointAbscissa.push_back(extremums_xview[i]);
+            }
 
-        QDataStream out(&saveFile);
-            out << y;
+            save.saveTime = time;
+            save.saveAmplitude = amplitude;
+            save.saveFrequency = frequency;
+
+            QDataStream out(&saveFile);
+               out << save;
             saveFile.close();
+        }
     }
 }
 
 void MainWindow::on_action_open_triggered()
 {
+    /*
+
+    QMessageBox *pmbx;
+    QString fileName = QFileDialog::getOpenFileName(this,tr("Выбор файла"),"/untiled",tr("* .txt"));
+    if(!fileName.isEmpty()){
+        QFile openFile(fileName);
+
+        if(!openFile.open(QIODevice::ReadOnly)){
+        pmbx = new QMessageBox(QMessageBox::Question,"Ошибка",
+                                            "Ошибка чтения!\n",
+                                            QMessageBox::Ok);
+            int n = pmbx->exec();
+            if(n==QMessageBox::Ok){
+            delete pmbx;
+            }
+        }
+
+        x.clear();
+        y.clear();
+        xview.clear();
+        yview.clear();
+        extremums_yview.clear();
+        extremums_xview.clear();
+        extremums_y.clear();
+        extremums_x.clear();
+
+        graphData open;
+        QDataStream in(&openFile);
+            in >> open;
+            openFile.close();
+
+        for(int i=0;i<open.ordinate.size();++i){
+            y.push_back(open.ordinate[i]);
+            x.push_back(open.abscissa[i]);
+        }
+        for(int i=0;i<open.viewOrdinate.size();++i){
+            yview.push_back(open.viewOrdinate[i]);
+            xview.push_back(open.viewAbscissa[i]);
+        }
+        for(int i=0;i<open.pointOrdinate.size();++i){
+            extremums_y.push_back(open.pointOrdinate[i]);
+            extremums_x.push_back(open.pointAbscissa[i]);
+        }
+        for(int i=0;i<open.viewPointOrdinate.size();++i){
+            extremums_yview.push_back(open.viewPointOrdinate[i]);
+            extremums_xview.push_back(open.viewPointAbscissa[i]);
+        }
+
+        time = open.saveTime;
+        amplitude = open.saveAmplitude;
+        frequency = open.saveFrequency;
+
+        QColor color(setting_window.red,setting_window.green,setting_window.blue);
+        ui->widget->clearGraphs();
+        ui->widget->setInteraction(QCP::iRangeDrag, true);
+        ui->widget->setInteraction(QCP::iRangeZoom, true);
+
+        ui->widget->xAxis->setRange(xBegin+time-5,xEnd+time-5);
+        ui->widget->yAxis->setRange(-5,5);
+
+        ui->widget->addGraph();
+        ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
+        ui->widget->graph(0)->addData(x,y);
+
+        if(!setting_window.antialiasing)
+            ui->widget->graph(0)->setAntialiased(false);
+
+        if(setting_window.viewPoints){
+            QColor pointsColor(setting_window.redPoints,setting_window.greenPoints,setting_window.bluePoints);
+            ui->widget->addGraph();
+            ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
+            ui->widget->graph(1)->setPen(pointsColor);
+            ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
+            ui->widget->graph(1)->addData(extremums_xview,extremums_yview);
+        }
+
+        ui->amplitude_Slider->setValue(amplitude);
+        ui->frequency_Slider->setValue(frequency);
+
+        ui->widget->replot();
+
+        */
+
     QMessageBox *pmbx;
     if(socket->state()== QTcpSocket::ConnectedState){
         pmbx = new QMessageBox(QMessageBox::Question,"Ошибка",
@@ -427,47 +551,31 @@ void MainWindow::on_action_open_triggered()
                        extremums_y.clear();
                        extremums_x.clear();
 
-
+                       graphData open;
                        QDataStream in(&openFile);
-                           in >> y;
+                           in >> open;
                            openFile.close();
-                       int size=y.size();
-                       for(int i=0;i<size;++i){
-                           x.push_back(h*i);
+
+                       for(int i=0;i<open.ordinate.size();++i){
+                           y.push_back(open.ordinate[i]);
+                           x.push_back(open.abscissa[i]);
                        }
-                       time = x[size-2];
-                       if(size>area_limit){
-                           for(int i=0;i<area_limit;++i){
-                               xview.push_back(x[size]-1-i);
-                               yview.push_back(y[size]-1-i);
-                           }
+                       for(int i=0;i<open.viewOrdinate.size();++i){
+                           yview.push_back(open.viewOrdinate[i]);
+                           xview.push_back(open.viewAbscissa[i]);
                        }
-                       else{
-                           for(int i=0;i<size;++i){
-                               xview.push_back(x[i]);
-                               yview.push_back(y[i]);
-                           }
+                       for(int i=0;i<open.pointOrdinate.size();++i){
+                           extremums_y.push_back(open.pointOrdinate[i]);
+                           extremums_x.push_back(open.pointAbscissa[i]);
+                       }
+                       for(int i=0;i<open.viewPointOrdinate.size();++i){
+                           extremums_yview.push_back(open.viewPointOrdinate[i]);
+                           extremums_xview.push_back(open.viewPointAbscissa[i]);
                        }
 
-                       if(size>=3){
-                           for(int i=2;i<size;++i){
-                               if(((y[i]-y[i-1])/0.01>0 && (y[i-1]-y[i-2])/0.01<0) || ((y[i]-y[i-1])/0.01<0 && (y[i-1]-y[i-2])/0.01>0)){
-                                   extremums_x.push_back(x[i-1]);
-                                   extremums_y.push_back(y[i-1]);
-                                   extremums_xview.push_back(x[i-1]);
-                                   extremums_yview.push_back(y[i-1]);
-                                   if(extremums_xview.size()==area_limit){
-                                       for(int i=0;i<area_limit;++i){
-                                           extremums_xview.swapItemsAt(i,i+1);
-                                           extremums_yview.swapItemsAt(i,i+1);
-                                       }
-                                       int j = extremums_xview.size();
-                                       extremums_xview[j-1]=x[i-1];
-                                       extremums_yview[j-1]=y[i-1];
-                                   }
-                               }
-                           }
-                       }
+                       time = open.saveTime;
+                       amplitude = open.saveAmplitude;
+                       frequency = open.saveFrequency;
 
                        QColor color(setting_window.red,setting_window.green,setting_window.blue);
                        ui->widget->clearGraphs();
@@ -492,6 +600,9 @@ void MainWindow::on_action_open_triggered()
                            ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
                            ui->widget->graph(1)->addData(extremums_xview,extremums_yview);
                        }
+
+                       ui->amplitude_Slider->setValue(amplitude);
+                       ui->frequency_Slider->setValue(frequency);
 
                        ui->widget->replot();
                 }
@@ -522,47 +633,31 @@ void MainWindow::on_action_open_triggered()
             extremums_y.clear();
             extremums_x.clear();
 
-
+            graphData open;
             QDataStream in(&openFile);
-                in >> y;
+                in >> open;
                 openFile.close();
-            int size=y.size();
-            for(int i=0;i<size;++i){
-                x.push_back(h*i);
+
+            for(int i=0;i<open.ordinate.size();++i){
+                y.push_back(open.ordinate[i]);
+                x.push_back(open.abscissa[i]);
             }
-            time = x[size-2];
-            if(size>area_limit){
-                for(int i=0;i<area_limit;++i){
-                    xview.push_back(x[size]-1-i);
-                    yview.push_back(y[size]-1-i);
-                }
+            for(int i=0;i<open.viewOrdinate.size();++i){
+                yview.push_back(open.viewOrdinate[i]);
+                xview.push_back(open.viewAbscissa[i]);
             }
-            else{
-                for(int i=0;i<size;++i){
-                    xview.push_back(x[i]);
-                    yview.push_back(y[i]);
-                }
+            for(int i=0;i<open.pointOrdinate.size();++i){
+                extremums_y.push_back(open.pointOrdinate[i]);
+                extremums_x.push_back(open.pointAbscissa[i]);
+            }
+            for(int i=0;i<open.viewPointOrdinate.size();++i){
+                extremums_yview.push_back(open.viewPointOrdinate[i]);
+                extremums_xview.push_back(open.viewPointAbscissa[i]);
             }
 
-            if(size>=3){
-                for(int i=2;i<size;++i){
-                    if(((y[i]-y[i-1])/0.01>0 && (y[i-1]-y[i-2])/0.01<0) || ((y[i]-y[i-1])/0.01<0 && (y[i-1]-y[i-2])/0.01>0)){
-                        extremums_x.push_back(x[i-1]);
-                        extremums_y.push_back(y[i-1]);
-                        extremums_xview.push_back(x[i-1]);
-                        extremums_yview.push_back(y[i-1]);
-                        if(extremums_xview.size()==area_limit){
-                            for(int i=0;i<area_limit;++i){
-                                extremums_xview.swapItemsAt(i,i+1);
-                                extremums_yview.swapItemsAt(i,i+1);
-                            }
-                            int j = extremums_xview.size();
-                            extremums_xview[j-1]=x[i-1];
-                            extremums_yview[j-1]=y[i-1];
-                        }
-                    }
-                }
-            }
+            time = open.saveTime;
+            amplitude = open.saveAmplitude;
+            frequency = open.saveFrequency;
 
             QColor color(setting_window.red,setting_window.green,setting_window.blue);
             ui->widget->clearGraphs();
@@ -588,8 +683,12 @@ void MainWindow::on_action_open_triggered()
                 ui->widget->graph(1)->addData(extremums_xview,extremums_yview);
             }
 
+            ui->amplitude_Slider->setValue(amplitude);
+            ui->frequency_Slider->setValue(frequency);
+
             ui->widget->replot();
         }
     }
+
 }
 
