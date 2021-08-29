@@ -80,7 +80,7 @@ void MainWindow::sockReady()
     }
     int n = y.size();
     if(n>=3){
-        if(((y[n-3]-y[n-2])/0.01>0 && (y[n-2]-y[n-1])/0.01<0) || ((y[n-3]-y[n-2])/0.01<0 && (y[n-2]-y[n-1])/0.01>0)){
+        if(((y[n-3]-y[n-2])/h>0 && (y[n-2]-y[n-1])/h<0) || ((y[n-3]-y[n-2])/h<0 && (y[n-2]-y[n-1])/h>0)){
             extremums_x.push_back(time-0.01);
             extremums_y.push_back(y[n-2]);
             extremums_xview.push_back(time-0.01);
@@ -285,6 +285,26 @@ void MainWindow::on_SettingAction_triggered()
     setting_window.setModal(true);
     setting_window.updateValue();
     setting_window.exec();
+    QColor color(setting_window.red,setting_window.green,setting_window.blue);
+
+    ui->widget->xAxis->setRange(xBegin+time-5,xEnd+time-5);
+    ui->widget->yAxis->setRange(-5,5);
+
+    ui->widget->addGraph();
+    ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
+    ui->widget->graph(0)->addData(x,y);
+
+    if(!setting_window.antialiasing)
+        ui->widget->graph(0)->setAntialiased(false);
+    if(setting_window.viewPoints){
+        QColor pointsColor(setting_window.redPoints,setting_window.greenPoints,setting_window.bluePoints);
+        ui->widget->addGraph();
+        ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
+        ui->widget->graph(1)->setPen(pointsColor);
+        ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
+        ui->widget->graph(1)->addData(extremums_xview,extremums_yview);
+    }
+
     if(setting_window.background_color==1){
         ui->widget->setBackground(Qt::white);
     }
@@ -295,7 +315,9 @@ void MainWindow::on_SettingAction_triggered()
         ui->widget->setBackground(Qt::red);
     }
     else ui->widget->setBackground(Qt::blue);
+
     ui->widget->replot();
+
 }
 
 void MainWindow::on_action_exit_triggered()
@@ -428,89 +450,6 @@ void MainWindow::on_action_save_triggered()
 
 void MainWindow::on_action_open_triggered()
 {
-    /*
-
-    QMessageBox *pmbx;
-    QString fileName = QFileDialog::getOpenFileName(this,tr("Выбор файла"),"/untiled",tr("* .txt"));
-    if(!fileName.isEmpty()){
-        QFile openFile(fileName);
-
-        if(!openFile.open(QIODevice::ReadOnly)){
-        pmbx = new QMessageBox(QMessageBox::Question,"Ошибка",
-                                            "Ошибка чтения!\n",
-                                            QMessageBox::Ok);
-            int n = pmbx->exec();
-            if(n==QMessageBox::Ok){
-            delete pmbx;
-            }
-        }
-
-        x.clear();
-        y.clear();
-        xview.clear();
-        yview.clear();
-        extremums_yview.clear();
-        extremums_xview.clear();
-        extremums_y.clear();
-        extremums_x.clear();
-
-        graphData open;
-        QDataStream in(&openFile);
-            in >> open;
-            openFile.close();
-
-        for(int i=0;i<open.ordinate.size();++i){
-            y.push_back(open.ordinate[i]);
-            x.push_back(open.abscissa[i]);
-        }
-        for(int i=0;i<open.viewOrdinate.size();++i){
-            yview.push_back(open.viewOrdinate[i]);
-            xview.push_back(open.viewAbscissa[i]);
-        }
-        for(int i=0;i<open.pointOrdinate.size();++i){
-            extremums_y.push_back(open.pointOrdinate[i]);
-            extremums_x.push_back(open.pointAbscissa[i]);
-        }
-        for(int i=0;i<open.viewPointOrdinate.size();++i){
-            extremums_yview.push_back(open.viewPointOrdinate[i]);
-            extremums_xview.push_back(open.viewPointAbscissa[i]);
-        }
-
-        time = open.saveTime;
-        amplitude = open.saveAmplitude;
-        frequency = open.saveFrequency;
-
-        QColor color(setting_window.red,setting_window.green,setting_window.blue);
-        ui->widget->clearGraphs();
-        ui->widget->setInteraction(QCP::iRangeDrag, true);
-        ui->widget->setInteraction(QCP::iRangeZoom, true);
-
-        ui->widget->xAxis->setRange(xBegin+time-5,xEnd+time-5);
-        ui->widget->yAxis->setRange(-5,5);
-
-        ui->widget->addGraph();
-        ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
-        ui->widget->graph(0)->addData(x,y);
-
-        if(!setting_window.antialiasing)
-            ui->widget->graph(0)->setAntialiased(false);
-
-        if(setting_window.viewPoints){
-            QColor pointsColor(setting_window.redPoints,setting_window.greenPoints,setting_window.bluePoints);
-            ui->widget->addGraph();
-            ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
-            ui->widget->graph(1)->setPen(pointsColor);
-            ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-            ui->widget->graph(1)->addData(extremums_xview,extremums_yview);
-        }
-
-        ui->amplitude_Slider->setValue(amplitude);
-        ui->frequency_Slider->setValue(frequency);
-
-        ui->widget->replot();
-
-        */
-
     QMessageBox *pmbx;
     if(socket->state()== QTcpSocket::ConnectedState){
         pmbx = new QMessageBox(QMessageBox::Question,"Ошибка",
