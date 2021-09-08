@@ -9,7 +9,8 @@ CONFIG -= app_bundle
 
 SOURCES += \
         main.cpp \
-        mytcpserver.cpp
+        mytcpserver.cpp \
+        thread.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -17,4 +18,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    mytcpserver.h
+    mytcpserver.h \
+    thread.h
