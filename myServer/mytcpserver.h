@@ -14,18 +14,9 @@ class MyTcpServer : public QTcpServer
 public:
     explicit MyTcpServer(QObject *parent = 0);
     void startServer();
-    double amplitude=1;
-    int speed = 90000;
 
-public slots:
-    void slotNewConnection();
-    void slotServerRead();
-    void slotClientDisconnected();
 protected:
     void incomingConnection(qintptr socketDescriptor);
-private:
-    QTcpServer *server;
-    QTcpSocket *socket;
 };
 
 
