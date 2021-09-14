@@ -63,40 +63,7 @@ void MainWindow::sockReady()
     ui->widget->setInteraction(QCP::iRangeZoom, false);
     Data = socket->readAll();
     double ordinate = QVariant(Data).toDouble();
-    y.push_back(ordinate);
-    x.push_back(time);
-    if(time*100<=area_limit){
-        xview.push_back(time);
-        yview.push_back(ordinate);
-    }
-    else{
-        for(int i=0;i<area_limit;++i){
-            xview.swapItemsAt(i,i+1);
-            yview.swapItemsAt(i,i+1);
-        }
-        int k=xview.size();
-        xview[k-1]=time;
-        yview[k-1]=ordinate;
-    }
-    int n = y.size();
-    if(n>=3){
-        if(((y[n-3]-y[n-2])/h>0 && (y[n-2]-y[n-1])/h<0) || ((y[n-3]-y[n-2])/h<0 && (y[n-2]-y[n-1])/h>0)){
-            extremums_x.push_back(time-0.01);
-            extremums_y.push_back(y[n-2]);
-            extremums_xview.push_back(time-0.01);
-            extremums_yview.push_back(y[n-2]);
-            if(extremums_xview.size()==area_limit){
-                for(int i=0;i<area_limit;++i){
-                   extremums_xview.swapItemsAt(i,i+1);
-                    extremums_yview.swapItemsAt(i,i+1);
-                }
-                int j = extremums_xview.size();
-                extremums_xview[j-1]=time-0.01;
-                extremums_yview[j-1]=y[n-2];
-            }
-        }
-    }
-
+    allData.add(time, ordinate);
     time+=h;
     amplitude = ui->amplitude_Slider->value();
     frequency = ui->frequency_Slider->value();
@@ -120,7 +87,7 @@ void MainWindow::sockReady()
 
         ui->widget->addGraph();
         ui->widget->graph(0)->setPen(QPen(lineColor,setting_window.size_line));
-        ui->widget->graph(0)->addData(xview,yview);
+        ui->widget->graph(0)->addData(allData.xview,allData.yview);
 
 
 
@@ -132,7 +99,7 @@ void MainWindow::sockReady()
             ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
             ui->widget->graph(1)->setPen(pointsColor);
             ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-            ui->widget->graph(1)->addData(extremums_x,extremums_y);
+            ui->widget->graph(1)->addData(allData.extremums_x,allData.extremums_y);
         }
 
 
@@ -144,7 +111,7 @@ void MainWindow::sockReady()
 
         ui->widget->addGraph();
         ui->widget->graph(0)->setPen(QPen(lineColor,setting_window.size_line));
-        ui->widget->graph(0)->addData(xview,yview);
+        ui->widget->graph(0)->addData(allData.xview,allData.yview);
 
         if(!setting_window.antialiasing)
             ui->widget->graph(0)->setAntialiased(false);
@@ -154,7 +121,7 @@ void MainWindow::sockReady()
             ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
             ui->widget->graph(1)->setPen(pointsColor);
             ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-            ui->widget->graph(1)->addData(extremums_x,extremums_y);
+            ui->widget->graph(1)->addData(allData.extremums_x,allData.extremums_y);
         }
         ui->widget->replot();
     }
@@ -225,14 +192,14 @@ void MainWindow::on_connectButton_clicked()
 
             massiv.clear();
             delete pmbx;
-            x.clear();
-            y.clear();
-            xview.clear();
-            yview.clear();
-            extremums_yview.clear();
-            extremums_xview.clear();
-            extremums_y.clear();
-            extremums_x.clear();
+            allData.x.clear();
+            allData.y.clear();
+            allData.xview.clear();
+            allData.yview.clear();
+            allData.extremums_yview.clear();
+            allData.extremums_xview.clear();
+            allData.extremums_y.clear();
+            allData.extremums_x.clear();
 
             ui->connectButton->setEnabled(false);
             ui->connectButton->repaint();
@@ -256,7 +223,7 @@ void MainWindow::on_disconnectButton_clicked()
 
     ui->widget->addGraph();
     ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
-    ui->widget->graph(0)->addData(x,y);
+    ui->widget->graph(0)->addData(allData.x,allData.y);
 
     if(!setting_window.antialiasing)
         ui->widget->graph(0)->setAntialiased(false);
@@ -266,7 +233,7 @@ void MainWindow::on_disconnectButton_clicked()
         ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
         ui->widget->graph(1)->setPen(pointsColor);
         ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-        ui->widget->graph(1)->addData(extremums_xview,extremums_yview);
+        ui->widget->graph(1)->addData(allData.extremums_xview,allData.extremums_yview);
     }
 
 
@@ -292,7 +259,7 @@ void MainWindow::on_SettingAction_triggered()
 
     ui->widget->addGraph();
     ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
-    ui->widget->graph(0)->addData(x,y);
+    ui->widget->graph(0)->addData(allData.x,allData.y);
 
     if(!setting_window.antialiasing)
         ui->widget->graph(0)->setAntialiased(false);
@@ -302,7 +269,7 @@ void MainWindow::on_SettingAction_triggered()
         ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
         ui->widget->graph(1)->setPen(pointsColor);
         ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-        ui->widget->graph(1)->addData(extremums_xview,extremums_yview);
+        ui->widget->graph(1)->addData(allData.extremums_xview,allData.extremums_yview);
     }
 
     if(setting_window.background_color==1){
@@ -420,21 +387,21 @@ void MainWindow::on_action_save_triggered()
         }
         else{
             graphData save;
-            for(int i=0;i<y.size();++i){
-                save.ordinate.push_back(y[i]);
-                save.abscissa.push_back(x[i]);
+            for(int i=0;i<allData.y.size();++i){
+                save.ordinate.push_back(allData.y[i]);
+                save.abscissa.push_back(allData.x[i]);
             }
-            for(int i=0;i<yview.size();++i){
-                save.viewOrdinate.push_back(yview[i]);
-                save.viewAbscissa.push_back(xview[i]);
+            for(int i=0;i<allData.yview.size();++i){
+                save.viewOrdinate.push_back(allData.yview[i]);
+                save.viewAbscissa.push_back(allData.xview[i]);
             }
-            for(int i=0;i<extremums_y.size();++i){
-                save.pointOrdinate.push_back(extremums_y[i]);
-                save.pointAbscissa.push_back(extremums_x[i]);
+            for(int i=0;i<allData.extremums_y.size();++i){
+                save.pointOrdinate.push_back(allData.extremums_y[i]);
+                save.pointAbscissa.push_back(allData.extremums_x[i]);
             }
-            for(int i=0;i<extremums_yview.size();++i){
-                save.viewPointOrdinate.push_back(extremums_yview[i]);
-                save.viewPointAbscissa.push_back(extremums_xview[i]);
+            for(int i=0;i<allData.extremums_yview.size();++i){
+                save.viewPointOrdinate.push_back(allData.extremums_yview[i]);
+                save.viewPointAbscissa.push_back(allData.extremums_xview[i]);
             }
 
             save.saveTime = time;
@@ -481,14 +448,14 @@ void MainWindow::on_action_open_triggered()
                            }
                        }
 
-                       x.clear();
-                       y.clear();
-                       xview.clear();
-                       yview.clear();
-                       extremums_yview.clear();
-                       extremums_xview.clear();
-                       extremums_y.clear();
-                       extremums_x.clear();
+                       allData.x.clear();
+                       allData.y.clear();
+                       allData.xview.clear();
+                       allData.yview.clear();
+                       allData.extremums_yview.clear();
+                       allData.extremums_xview.clear();
+                       allData.extremums_y.clear();
+                       allData.extremums_x.clear();
 
                        graphData open;
                        QDataStream in(&openFile);
@@ -496,20 +463,20 @@ void MainWindow::on_action_open_triggered()
                            openFile.close();
 
                        for(int i=0;i<open.ordinate.size();++i){
-                           y.push_back(open.ordinate[i]);
-                           x.push_back(open.abscissa[i]);
+                           allData.y.push_back(open.ordinate[i]);
+                           allData.x.push_back(open.abscissa[i]);
                        }
                        for(int i=0;i<open.viewOrdinate.size();++i){
-                           yview.push_back(open.viewOrdinate[i]);
-                           xview.push_back(open.viewAbscissa[i]);
+                           allData.yview.push_back(open.viewOrdinate[i]);
+                           allData.xview.push_back(open.viewAbscissa[i]);
                        }
                        for(int i=0;i<open.pointOrdinate.size();++i){
-                           extremums_y.push_back(open.pointOrdinate[i]);
-                           extremums_x.push_back(open.pointAbscissa[i]);
+                           allData.extremums_y.push_back(open.pointOrdinate[i]);
+                           allData.extremums_x.push_back(open.pointAbscissa[i]);
                        }
                        for(int i=0;i<open.viewPointOrdinate.size();++i){
-                           extremums_yview.push_back(open.viewPointOrdinate[i]);
-                           extremums_xview.push_back(open.viewPointAbscissa[i]);
+                           allData.extremums_yview.push_back(open.viewPointOrdinate[i]);
+                           allData.extremums_xview.push_back(open.viewPointAbscissa[i]);
                        }
 
                        time = open.saveTime;
@@ -526,7 +493,7 @@ void MainWindow::on_action_open_triggered()
 
                        ui->widget->addGraph();
                        ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
-                       ui->widget->graph(0)->addData(x,y);
+                       ui->widget->graph(0)->addData(allData.x,allData.y);
 
                        if(!setting_window.antialiasing)
                            ui->widget->graph(0)->setAntialiased(false);
@@ -537,7 +504,7 @@ void MainWindow::on_action_open_triggered()
                            ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
                            ui->widget->graph(1)->setPen(pointsColor);
                            ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-                           ui->widget->graph(1)->addData(extremums_xview,extremums_yview);
+                           ui->widget->graph(1)->addData(allData.extremums_xview,allData.extremums_yview);
                        }
 
                        ui->amplitude_Slider->setValue(amplitude);
@@ -563,14 +530,14 @@ void MainWindow::on_action_open_triggered()
                 }
             }
 
-            x.clear();
-            y.clear();
-            xview.clear();
-            yview.clear();
-            extremums_yview.clear();
-            extremums_xview.clear();
-            extremums_y.clear();
-            extremums_x.clear();
+            allData.x.clear();
+            allData.y.clear();
+            allData.xview.clear();
+            allData.yview.clear();
+            allData.extremums_yview.clear();
+            allData.extremums_xview.clear();
+            allData.extremums_y.clear();
+            allData.extremums_x.clear();
 
             graphData open;
             QDataStream in(&openFile);
@@ -578,20 +545,20 @@ void MainWindow::on_action_open_triggered()
                 openFile.close();
 
             for(int i=0;i<open.ordinate.size();++i){
-                y.push_back(open.ordinate[i]);
-                x.push_back(open.abscissa[i]);
+                allData.y.push_back(open.ordinate[i]);
+                allData.x.push_back(open.abscissa[i]);
             }
             for(int i=0;i<open.viewOrdinate.size();++i){
-                yview.push_back(open.viewOrdinate[i]);
-                xview.push_back(open.viewAbscissa[i]);
+                allData.yview.push_back(open.viewOrdinate[i]);
+                allData.xview.push_back(open.viewAbscissa[i]);
             }
             for(int i=0;i<open.pointOrdinate.size();++i){
-                extremums_y.push_back(open.pointOrdinate[i]);
-                extremums_x.push_back(open.pointAbscissa[i]);
+                allData.extremums_y.push_back(open.pointOrdinate[i]);
+                allData.extremums_x.push_back(open.pointAbscissa[i]);
             }
             for(int i=0;i<open.viewPointOrdinate.size();++i){
-                extremums_yview.push_back(open.viewPointOrdinate[i]);
-                extremums_xview.push_back(open.viewPointAbscissa[i]);
+                allData.extremums_yview.push_back(open.viewPointOrdinate[i]);
+                allData.extremums_xview.push_back(open.viewPointAbscissa[i]);
             }
 
             time = open.saveTime;
@@ -608,7 +575,7 @@ void MainWindow::on_action_open_triggered()
 
             ui->widget->addGraph();
             ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
-            ui->widget->graph(0)->addData(x,y);
+            ui->widget->graph(0)->addData(allData.x,allData.y);
 
             if(!setting_window.antialiasing)
                 ui->widget->graph(0)->setAntialiased(false);
@@ -619,7 +586,7 @@ void MainWindow::on_action_open_triggered()
                 ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
                 ui->widget->graph(1)->setPen(pointsColor);
                 ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-                ui->widget->graph(1)->addData(extremums_xview,extremums_yview);
+                ui->widget->graph(1)->addData(allData.extremums_xview,allData.extremums_yview);
             }
 
             ui->amplitude_Slider->setValue(amplitude);
