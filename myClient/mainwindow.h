@@ -5,6 +5,7 @@
 #include <QTcpSocket>
 #include "viewsetting.h"
 #include "signaldata.h"
+#include "dataio.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,11 +21,12 @@ public:
 
     QTcpSocket* socket;
     QByteArray Data;
-    QVector<double> massiv;
+    QVector<double> dataToServer;
     double xBegin=0, xEnd=0, h=0.01, X=0, time=0,amplitude=20,frequency=10;
     int area_limit=5/h;
     QSettings settings;
     SignalData allData;
+    DataIO fileWork;
 
 public slots:
     void sockReady();

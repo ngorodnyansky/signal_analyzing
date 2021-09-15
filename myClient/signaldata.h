@@ -1,7 +1,6 @@
 #pragma once
 #include <QVector>
 
-
 class SignalData
 {
 public:

@@ -68,17 +68,17 @@ void MainWindow::sockReady()
     amplitude = ui->amplitude_Slider->value();
     frequency = ui->frequency_Slider->value();
 
-    massiv.push_back(time);
-    massiv.push_back(amplitude);
-    massiv.push_back(frequency);
+    dataToServer.push_back(time);
+    dataToServer.push_back(amplitude);
+    dataToServer.push_back(frequency);
 
     QDataStream out(&Data,QIODevice::WriteOnly);
-    out << massiv;
+    out << dataToServer;
 
     socket->write(Data);
     socket->waitForBytesWritten();
 
-    massiv.clear();
+    dataToServer.clear();
 
     ui->widget->clearGraphs();
     if(time<=5){
@@ -131,17 +131,17 @@ void MainWindow::on_connectButton_clicked()
 {
     if(time==0){
         socket->connectToHost("127.0.0.1",6000);
-        massiv.push_back(time);
-        massiv.push_back(ui->amplitude_Slider->value());
-        massiv.push_back(ui->frequency_Slider->value());
+        dataToServer.push_back(time);
+        dataToServer.push_back(ui->amplitude_Slider->value());
+        dataToServer.push_back(ui->frequency_Slider->value());
 
         QDataStream out(&Data,QIODevice::WriteOnly);
-        out << massiv;
+        out << dataToServer;
 
         socket->write(Data);
         socket->waitForBytesWritten();
 
-        massiv.clear();
+        dataToServer.clear();
 
         ui->connectButton->setEnabled(false);
         ui->connectButton->repaint();
@@ -159,17 +159,17 @@ void MainWindow::on_connectButton_clicked()
         int n = pmbx->exec();
 
         if(n==QMessageBox::Yes){
-            massiv.push_back(time);
-            massiv.push_back(ui->amplitude_Slider->value());
-            massiv.push_back(ui->frequency_Slider->value());
+            dataToServer.push_back(time);
+            dataToServer.push_back(ui->amplitude_Slider->value());
+            dataToServer.push_back(ui->frequency_Slider->value());
 
             QDataStream out(&Data,QIODevice::WriteOnly);
-            out << massiv;
+            out << dataToServer;
 
             socket->write(Data);
             socket->waitForBytesWritten();
 
-            massiv.clear();
+            dataToServer.clear();
             delete pmbx;
 
             ui->connectButton->setEnabled(false);
@@ -180,17 +180,17 @@ void MainWindow::on_connectButton_clicked()
         }
         else if(n==QMessageBox::No){
             time=0;
-            massiv.push_back(time);
-            massiv.push_back(ui->amplitude_Slider->value());
-            massiv.push_back(ui->frequency_Slider->value());
+            dataToServer.push_back(time);
+            dataToServer.push_back(ui->amplitude_Slider->value());
+            dataToServer.push_back(ui->frequency_Slider->value());
 
             QDataStream out(&Data,QIODevice::WriteOnly);
-            out << massiv;
+            out << dataToServer;
 
             socket->write(Data);
             socket->waitForBytesWritten();
 
-            massiv.clear();
+            dataToServer.clear();
             delete pmbx;
             allData.x.clear();
             allData.y.clear();
@@ -373,45 +373,7 @@ void MainWindow::on_action_save_triggered()
         }
     }
     else {
-        QString saveName = QFileDialog::getSaveFileName(this,tr("Выбор папки"),"/home/untitled.txt",tr("* .txt"));
-        QFile saveFile(saveName + ".txt");
-
-        if(!saveFile.open(QIODevice::WriteOnly)){
-            pmbx = new QMessageBox(QMessageBox::Question,"Ошибка",
-                                                "Ошибка записи!\n",
-                                                QMessageBox::Ok);
-            int n = pmbx->exec();
-            if(n==QMessageBox::Ok){
-               delete pmbx;
-            }
-        }
-        else{
-            graphData save;
-            for(int i=0;i<allData.y.size();++i){
-                save.ordinate.push_back(allData.y[i]);
-                save.abscissa.push_back(allData.x[i]);
-            }
-            for(int i=0;i<allData.yview.size();++i){
-                save.viewOrdinate.push_back(allData.yview[i]);
-                save.viewAbscissa.push_back(allData.xview[i]);
-            }
-            for(int i=0;i<allData.extremums_y.size();++i){
-                save.pointOrdinate.push_back(allData.extremums_y[i]);
-                save.pointAbscissa.push_back(allData.extremums_x[i]);
-            }
-            for(int i=0;i<allData.extremums_yview.size();++i){
-                save.viewPointOrdinate.push_back(allData.extremums_yview[i]);
-                save.viewPointAbscissa.push_back(allData.extremums_xview[i]);
-            }
-
-            save.saveTime = time;
-            save.saveAmplitude = amplitude;
-            save.saveFrequency = frequency;
-
-            QDataStream out(&saveFile);
-               out << save;
-            saveFile.close();
-        }
+        fileWork.save(allData);
     }
 }
 
@@ -434,54 +396,8 @@ void MainWindow::on_action_open_triggered()
                int n = pmbx->exec();
                if(n==QMessageBox::Ok){
                   delete pmbx;
-                   QString fileName = QFileDialog::getOpenFileName(this,tr("Выбор файла"),"/untiled",tr("* .txt"));
-                   if(!fileName.isEmpty()){
-                       QFile openFile(fileName);
+                   fileWork.open(allData);
 
-                       if(!openFile.open(QIODevice::ReadOnly)){
-                       pmbx = new QMessageBox(QMessageBox::Question,"Ошибка",
-                                                           "Ошибка чтения!\n",
-                                                           QMessageBox::Ok);
-                           int n = pmbx->exec();
-                           if(n==QMessageBox::Ok){
-                           delete pmbx;
-                           }
-                       }
-
-                       allData.x.clear();
-                       allData.y.clear();
-                       allData.xview.clear();
-                       allData.yview.clear();
-                       allData.extremums_yview.clear();
-                       allData.extremums_xview.clear();
-                       allData.extremums_y.clear();
-                       allData.extremums_x.clear();
-
-                       graphData open;
-                       QDataStream in(&openFile);
-                           in >> open;
-                           openFile.close();
-
-                       for(int i=0;i<open.ordinate.size();++i){
-                           allData.y.push_back(open.ordinate[i]);
-                           allData.x.push_back(open.abscissa[i]);
-                       }
-                       for(int i=0;i<open.viewOrdinate.size();++i){
-                           allData.yview.push_back(open.viewOrdinate[i]);
-                           allData.xview.push_back(open.viewAbscissa[i]);
-                       }
-                       for(int i=0;i<open.pointOrdinate.size();++i){
-                           allData.extremums_y.push_back(open.pointOrdinate[i]);
-                           allData.extremums_x.push_back(open.pointAbscissa[i]);
-                       }
-                       for(int i=0;i<open.viewPointOrdinate.size();++i){
-                           allData.extremums_yview.push_back(open.viewPointOrdinate[i]);
-                           allData.extremums_xview.push_back(open.viewPointAbscissa[i]);
-                       }
-
-                       time = open.saveTime;
-                       amplitude = open.saveAmplitude;
-                       frequency = open.saveFrequency;
 
                        QColor color(setting_window.red,setting_window.green,setting_window.blue);
                        ui->widget->clearGraphs();
@@ -511,59 +427,15 @@ void MainWindow::on_action_open_triggered()
                        ui->frequency_Slider->setValue(frequency);
 
                        ui->widget->replot();
-                }
+
+
             }
             if(n==QMessageBox::Cancel) delete pmbx;
         }
         else {
-        QString fileName = QFileDialog::getOpenFileName(this,tr("Выбор файла"),"/untiled",tr("* .txt"));
-        if(!fileName.isEmpty()){
-            QFile openFile(fileName);
 
-            if(!openFile.open(QIODevice::ReadOnly)){
-            pmbx = new QMessageBox(QMessageBox::Question,"Ошибка",
-                                                "Ошибка чтения!\n",
-                                                QMessageBox::Ok);
-                int n = pmbx->exec();
-                if(n==QMessageBox::Ok){
-                delete pmbx;
-                }
-            }
 
-            allData.x.clear();
-            allData.y.clear();
-            allData.xview.clear();
-            allData.yview.clear();
-            allData.extremums_yview.clear();
-            allData.extremums_xview.clear();
-            allData.extremums_y.clear();
-            allData.extremums_x.clear();
-
-            graphData open;
-            QDataStream in(&openFile);
-                in >> open;
-                openFile.close();
-
-            for(int i=0;i<open.ordinate.size();++i){
-                allData.y.push_back(open.ordinate[i]);
-                allData.x.push_back(open.abscissa[i]);
-            }
-            for(int i=0;i<open.viewOrdinate.size();++i){
-                allData.yview.push_back(open.viewOrdinate[i]);
-                allData.xview.push_back(open.viewAbscissa[i]);
-            }
-            for(int i=0;i<open.pointOrdinate.size();++i){
-                allData.extremums_y.push_back(open.pointOrdinate[i]);
-                allData.extremums_x.push_back(open.pointAbscissa[i]);
-            }
-            for(int i=0;i<open.viewPointOrdinate.size();++i){
-                allData.extremums_yview.push_back(open.viewPointOrdinate[i]);
-                allData.extremums_xview.push_back(open.viewPointAbscissa[i]);
-            }
-
-            time = open.saveTime;
-            amplitude = open.saveAmplitude;
-            frequency = open.saveFrequency;
+            fileWork.open(allData);
 
             QColor color(setting_window.red,setting_window.green,setting_window.blue);
             ui->widget->clearGraphs();
@@ -593,7 +465,7 @@ void MainWindow::on_action_open_triggered()
             ui->frequency_Slider->setValue(frequency);
 
             ui->widget->replot();
-        }
+
     }
 
 }
