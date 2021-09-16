@@ -40,3 +40,15 @@ void SignalData::add(double abscissa, double ordiate){
         }
     }
 }
+
+void SignalData::clear()
+{
+    x.clear();
+    y.clear();
+    xview.clear();
+    yview.clear();
+    extremums_yview.clear();
+    extremums_xview.clear();
+    extremums_y.clear();
+    extremums_x.clear();
+}

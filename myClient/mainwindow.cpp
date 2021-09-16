@@ -129,87 +129,26 @@ void MainWindow::sockReady()
 
 void MainWindow::on_connectButton_clicked()
 {
-    if(time==0){
-        socket->connectToHost("127.0.0.1",6000);
-        dataToServer.push_back(time);
-        dataToServer.push_back(ui->amplitude_Slider->value());
-        dataToServer.push_back(ui->frequency_Slider->value());
+    time = 0;
+    allData.clear();
+    socket->connectToHost("127.0.0.1",6000);
+    dataToServer.push_back(time);
+    dataToServer.push_back(ui->amplitude_Slider->value());
+    dataToServer.push_back(ui->frequency_Slider->value());
 
-        QDataStream out(&Data,QIODevice::WriteOnly);
-        out << dataToServer;
+    QDataStream out(&Data,QIODevice::WriteOnly);
+    out << dataToServer;
 
-        socket->write(Data);
-        socket->waitForBytesWritten();
+    socket->write(Data);
+    socket->waitForBytesWritten();
 
-        dataToServer.clear();
+    dataToServer.clear();
 
-        ui->connectButton->setEnabled(false);
-        ui->connectButton->repaint();
+    ui->connectButton->setEnabled(false);
+    ui->connectButton->repaint();
 
-        ui->disconnectButton->setEnabled(true);
-        ui->disconnectButton->repaint();
-
-    }
-    else{
-        socket->connectToHost("127.0.0.1",6000);
-        QMessageBox *pmbx = new QMessageBox(QMessageBox::Question,"MessageBox",
-                                            "Продолжить рисовать график или начать сначала?\n"
-                                            "Yes - Продолжить \nNo - Начать сначала\nCancel - Отмена ",
-                                            QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-        int n = pmbx->exec();
-
-        if(n==QMessageBox::Yes){
-            dataToServer.push_back(time);
-            dataToServer.push_back(ui->amplitude_Slider->value());
-            dataToServer.push_back(ui->frequency_Slider->value());
-
-            QDataStream out(&Data,QIODevice::WriteOnly);
-            out << dataToServer;
-
-            socket->write(Data);
-            socket->waitForBytesWritten();
-
-            dataToServer.clear();
-            delete pmbx;
-
-            ui->connectButton->setEnabled(false);
-            ui->connectButton->repaint();
-
-            ui->disconnectButton->setEnabled(true);
-            ui->disconnectButton->repaint();
-        }
-        else if(n==QMessageBox::No){
-            time=0;
-            dataToServer.push_back(time);
-            dataToServer.push_back(ui->amplitude_Slider->value());
-            dataToServer.push_back(ui->frequency_Slider->value());
-
-            QDataStream out(&Data,QIODevice::WriteOnly);
-            out << dataToServer;
-
-            socket->write(Data);
-            socket->waitForBytesWritten();
-
-            dataToServer.clear();
-            delete pmbx;
-            allData.x.clear();
-            allData.y.clear();
-            allData.xview.clear();
-            allData.yview.clear();
-            allData.extremums_yview.clear();
-            allData.extremums_xview.clear();
-            allData.extremums_y.clear();
-            allData.extremums_x.clear();
-
-            ui->connectButton->setEnabled(false);
-            ui->connectButton->repaint();
-
-            ui->disconnectButton->setEnabled(true);
-            ui->disconnectButton->repaint();
-        }
-        else delete pmbx;
-
-    }
+    ui->disconnectButton->setEnabled(true);
+    ui->disconnectButton->repaint();
 }
 
 void MainWindow::on_disconnectButton_clicked()
@@ -333,24 +272,6 @@ void MainWindow::writeSettings(){
     settings.endGroup();
 }
 
-
-struct graphData{
-    QVector<double> ordinate, abscissa, viewOrdinate, viewAbscissa;
-    QVector<double> pointOrdinate, pointAbscissa, viewPointOrdinate, viewPointAbscissa;
-    double saveTime=0, saveAmplitude=1,saveFrequency=1;
-};
-QDataStream &operator<<(QDataStream &out, const graphData &saveGraph){
-    out << saveGraph.ordinate << saveGraph.abscissa << saveGraph.viewOrdinate << saveGraph.viewAbscissa;
-    out << saveGraph.pointOrdinate << saveGraph.pointAbscissa << saveGraph.viewPointOrdinate << saveGraph.viewPointAbscissa;
-    out << saveGraph.saveTime << saveGraph.saveAmplitude << saveGraph.saveFrequency;
-    return out;
-}
-QDataStream &operator>>(QDataStream &in, graphData &openGraph){
-    in >> openGraph.ordinate >> openGraph.abscissa >> openGraph.viewOrdinate >> openGraph.viewAbscissa;
-    in >> openGraph.pointOrdinate >> openGraph.pointAbscissa >> openGraph.viewPointOrdinate >> openGraph.viewPointAbscissa;
-    in >> openGraph.saveTime >> openGraph.saveAmplitude >> openGraph.saveFrequency;
-    return in;
-};
 void MainWindow::on_action_save_triggered()
 {
     QMessageBox *pmbx;

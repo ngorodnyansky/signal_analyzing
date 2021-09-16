@@ -9,5 +9,6 @@ public:
     QVector <double> x,y,xview, yview, extremums_x, extremums_y, extremums_xview, extremums_yview;
     void add(double abscissa, double ordiate);
     SignalData();
+    void clear();
 };
 
