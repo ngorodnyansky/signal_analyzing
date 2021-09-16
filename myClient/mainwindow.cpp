@@ -157,7 +157,11 @@ void MainWindow::on_disconnectButton_clicked()
     ui->widget->setInteraction(QCP::iRangeDrag, true);
     ui->widget->setInteraction(QCP::iRangeZoom, true);
 
-    ui->widget->xAxis->setRange(xBegin+time-5,xEnd+time-5);
+    if(time>=5){
+        ui->widget->xAxis->setRange(xBegin+time-5,xEnd+time-5);
+    }
+    else ui->widget->xAxis->setRange(xBegin,xEnd);
+
     ui->widget->yAxis->setRange(-5,5);
 
     ui->widget->addGraph();
@@ -325,7 +329,7 @@ void MainWindow::on_action_open_triggered()
                        ui->widget->setInteraction(QCP::iRangeDrag, true);
                        ui->widget->setInteraction(QCP::iRangeZoom, true);
 
-                       ui->widget->xAxis->setRange(xBegin+time-5,xEnd+time-5);
+                       ui->widget->xAxis->setRange(xBegin,xEnd);
                        ui->widget->yAxis->setRange(-5,5);
 
                        ui->widget->addGraph();
@@ -355,7 +359,6 @@ void MainWindow::on_action_open_triggered()
         }
         else {
 
-
             fileWork.open(allData);
 
             QColor color(setting_window.red,setting_window.green,setting_window.blue);
@@ -363,7 +366,7 @@ void MainWindow::on_action_open_triggered()
             ui->widget->setInteraction(QCP::iRangeDrag, true);
             ui->widget->setInteraction(QCP::iRangeZoom, true);
 
-            ui->widget->xAxis->setRange(xBegin+time-5,xEnd+time-5);
+            ui->widget->xAxis->setRange(xBegin,xEnd);
             ui->widget->yAxis->setRange(-5,5);
 
             ui->widget->addGraph();
