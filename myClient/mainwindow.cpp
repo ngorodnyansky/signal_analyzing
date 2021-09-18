@@ -3,7 +3,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    settings("settings.ini", QSettings::IniFormat), ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
         connect(socket,SIGNAL(readyRead()),this,SLOT(sockReady()));
         connect(socket,SIGNAL(disconnected()),this,SLOT(sockDisc()));
-        readSettings();
+        settings.readSettings(setting_window);
         ui->amplitude_Slider->setRange(1,50);
         ui->amplitude_Slider->setValue(amplitude);
         ui->frequency_Slider->setRange(5,40);
@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    writeSettings();
+    settings.writeSettings(setting_window);
     delete ui;
 }
 
