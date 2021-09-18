@@ -13,6 +13,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     qcustomplot.cpp \
+    settings.cpp \
     signaldata.cpp \
     viewsetting.cpp
 
@@ -20,6 +21,7 @@ HEADERS += \
     dataio.h \
     mainwindow.h \
     qcustomplot.h \
+    settings.h \
     signaldata.h \
     viewsetting.h
 

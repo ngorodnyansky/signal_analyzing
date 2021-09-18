@@ -6,6 +6,7 @@
 #include "viewsetting.h"
 #include "signaldata.h"
 #include "dataio.h"
+#include "settings.h"
 
 namespace Ui {
 class MainWindow;
