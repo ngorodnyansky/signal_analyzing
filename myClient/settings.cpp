@@ -39,3 +39,4 @@ void Settings::readSettings( viewSetting &setting_window)
 
     settings.endGroup();
 }
+

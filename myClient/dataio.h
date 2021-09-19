@@ -8,11 +8,13 @@
 
 class DataIO
 {
-public:
+private:
     QVector<double> ordinate, abscissa, viewOrdinate, viewAbscissa;
     QVector<double> pointOrdinate, pointAbscissa, viewPointOrdinate, viewPointAbscissa;
+public:
+    friend QDataStream &operator>>(QDataStream &in, DataIO &openGraph);
     DataIO();
-    void save(const SignalData& data);
+    void save(SignalData& data);
     void open(SignalData& data);
 };
 

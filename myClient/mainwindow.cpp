@@ -87,7 +87,9 @@ void MainWindow::sockReady()
 
         ui->widget->addGraph();
         ui->widget->graph(0)->setPen(QPen(lineColor,setting_window.size_line));
-        ui->widget->graph(0)->addData(allData.xview,allData.yview);
+        allData.copyAbscissa(paintAbscissa);
+        allData.copyOrdinate(paintOrdinate);
+        ui->widget->graph(0)->addData(paintAbscissa,paintOrdinate);
 
 
 
@@ -99,7 +101,9 @@ void MainWindow::sockReady()
             ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
             ui->widget->graph(1)->setPen(pointsColor);
             ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-            ui->widget->graph(1)->addData(allData.extremums_x,allData.extremums_y);
+            allData.copyExtremumAbscissa(paintAbscissa);
+            allData.copyExtremumOrdinate(paintOrdinate);
+            ui->widget->graph(1)->addData(paintAbscissa,paintOrdinate);
         }
 
 
@@ -111,7 +115,9 @@ void MainWindow::sockReady()
 
         ui->widget->addGraph();
         ui->widget->graph(0)->setPen(QPen(lineColor,setting_window.size_line));
-        ui->widget->graph(0)->addData(allData.xview,allData.yview);
+        allData.copyAbscissaView(paintAbscissa);
+        allData.copyOrdinateView(paintOrdinate);
+        ui->widget->graph(0)->addData(paintAbscissa,paintOrdinate);
 
         if(!setting_window.antialiasing)
             ui->widget->graph(0)->setAntialiased(false);
@@ -121,7 +127,9 @@ void MainWindow::sockReady()
             ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
             ui->widget->graph(1)->setPen(pointsColor);
             ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-            ui->widget->graph(1)->addData(allData.extremums_x,allData.extremums_y);
+            allData.copyExtremumAbscissa(paintAbscissa);
+            allData.copyExtremumOrdinate(paintOrdinate);
+            ui->widget->graph(1)->addData(paintAbscissa,paintOrdinate);
         }
         ui->widget->replot();
     }
@@ -166,7 +174,9 @@ void MainWindow::on_disconnectButton_clicked()
 
     ui->widget->addGraph();
     ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
-    ui->widget->graph(0)->addData(allData.x,allData.y);
+    allData.copyAbscissa(paintAbscissa);
+    allData.copyOrdinate(paintOrdinate);
+    ui->widget->graph(0)->addData(paintAbscissa,paintOrdinate);
 
     if(!setting_window.antialiasing)
         ui->widget->graph(0)->setAntialiased(false);
@@ -176,7 +186,9 @@ void MainWindow::on_disconnectButton_clicked()
         ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
         ui->widget->graph(1)->setPen(pointsColor);
         ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-        ui->widget->graph(1)->addData(allData.extremums_xview,allData.extremums_yview);
+        allData.copyExtremumAbscissa(paintAbscissa);
+        allData.copyExtremumOrdinate(paintOrdinate);
+        ui->widget->graph(1)->addData(paintAbscissa,paintOrdinate);
     }
 
 
@@ -202,7 +214,9 @@ void MainWindow::on_SettingAction_triggered()
 
     ui->widget->addGraph();
     ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
-    ui->widget->graph(0)->addData(allData.x,allData.y);
+    allData.copyAbscissa(paintAbscissa);
+    allData.copyOrdinate(paintOrdinate);
+    ui->widget->graph(0)->addData(paintAbscissa,paintOrdinate);
 
     if(!setting_window.antialiasing)
         ui->widget->graph(0)->setAntialiased(false);
@@ -212,7 +226,9 @@ void MainWindow::on_SettingAction_triggered()
         ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
         ui->widget->graph(1)->setPen(pointsColor);
         ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-        ui->widget->graph(1)->addData(allData.extremums_xview,allData.extremums_yview);
+        allData.copyExtremumAbscissa(paintAbscissa);
+        allData.copyExtremumOrdinate(paintOrdinate);
+        ui->widget->graph(1)->addData(paintAbscissa,paintOrdinate);
     }
 
     if(setting_window.background_color==1){
@@ -293,7 +309,9 @@ void MainWindow::on_action_open_triggered()
 
                        ui->widget->addGraph();
                        ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
-                       ui->widget->graph(0)->addData(allData.x,allData.y);
+                       allData.copyAbscissa(paintAbscissa);
+                       allData.copyOrdinate(paintOrdinate);
+                       ui->widget->graph(0)->addData(paintAbscissa,paintOrdinate);
 
                        if(!setting_window.antialiasing)
                            ui->widget->graph(0)->setAntialiased(false);
@@ -304,7 +322,9 @@ void MainWindow::on_action_open_triggered()
                            ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
                            ui->widget->graph(1)->setPen(pointsColor);
                            ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-                           ui->widget->graph(1)->addData(allData.extremums_xview,allData.extremums_yview);
+                           allData.copyExtremumAbscissaView(paintAbscissa);
+                           allData.copyExtremumOrdinateView(paintOrdinate);
+                           ui->widget->graph(1)->addData(paintAbscissa,paintOrdinate);
                        }
 
                        ui->amplitude_Slider->setValue(amplitude);
@@ -330,7 +350,9 @@ void MainWindow::on_action_open_triggered()
 
             ui->widget->addGraph();
             ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
-            ui->widget->graph(0)->addData(allData.x,allData.y);
+            allData.copyAbscissa(paintAbscissa);
+            allData.copyOrdinate(paintOrdinate);
+            ui->widget->graph(0)->addData(paintAbscissa,paintOrdinate);
 
             if(!setting_window.antialiasing)
                 ui->widget->graph(0)->setAntialiased(false);
@@ -341,7 +363,9 @@ void MainWindow::on_action_open_triggered()
                 ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
                 ui->widget->graph(1)->setPen(pointsColor);
                 ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-                ui->widget->graph(1)->addData(allData.extremums_xview,allData.extremums_yview);
+                allData.copyExtremumAbscissaView(paintAbscissa);
+                allData.copyExtremumOrdinateView(paintOrdinate);
+                ui->widget->graph(1)->addData(paintAbscissa,paintOrdinate);
             }
 
             ui->amplitude_Slider->setValue(amplitude);
