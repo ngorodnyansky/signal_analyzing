@@ -112,41 +112,41 @@ void SignalData::copyOrdinate(QVector <double>& newCopy)
 {
     newCopy.clear();
     for(int i=0;i<y.size();i++)
-        newCopy.push_back(x[i]);
+        newCopy.push_back(y[i]);
 }
 void SignalData::copyAbscissaView(QVector <double>& newCopy)
 {
     newCopy.clear();
     for(int i=0;i<xview.size();i++)
-        newCopy.push_back(x[i]);
+        newCopy.push_back(xview[i]);
 }
 void SignalData::copyOrdinateView(QVector <double>& newCopy)
 {
     newCopy.clear();
     for(int i=0;i<yview.size();i++)
-        newCopy.push_back(x[i]);
+        newCopy.push_back(yview[i]);
 }
 void SignalData::copyExtremumAbscissa(QVector <double>& newCopy)
 {
     newCopy.clear();
     for(int i=0;i<extremums_x.size();i++)
-        newCopy.push_back(x[i]);
+        newCopy.push_back(extremums_x[i]);
 }
 void SignalData::copyExtremumOrdinate(QVector <double>& newCopy)
 {
     newCopy.clear();
     for(int i=0;i<extremums_y.size();i++)
-        newCopy.push_back(x[i]);
+        newCopy.push_back(extremums_y[i]);
 }
 void SignalData::copyExtremumAbscissaView(QVector <double>& newCopy)
 {
     newCopy.clear();
     for(int i=0;i<extremums_xview.size();i++)
-        newCopy.push_back(x[i]);
+        newCopy.push_back(extremums_xview[i]);
 }
 void SignalData::copyExtremumOrdinateView(QVector <double>& newCopy)
 {
     newCopy.clear();
     for(int i=0;i<extremums_yview.size();i++)
-        newCopy.push_back(x[i]);
+        newCopy.push_back(extremums_yview[i]);
 }
