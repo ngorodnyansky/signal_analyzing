@@ -28,7 +28,6 @@ public:
     Settings settings;
     SignalData allData;
     DataIO fileWork;
-    QVector <double> paintAbscissa,paintOrdinate;
 
 public slots:
     void sockReady();

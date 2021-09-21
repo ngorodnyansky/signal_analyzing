@@ -1,41 +1,36 @@
 #include "signaldata.h"
 
-SignalData::SignalData()
-{
-
-}
-
 void SignalData::add(double abscissa, double ordiate){
-    y.push_back(ordiate);
-    x.push_back(abscissa);
+    m_y.push_back(ordiate);
+    m_x.push_back(abscissa);
     if(abscissa*100<=area_limit){
-        xview.push_back(abscissa);
-        yview.push_back(ordiate);
+        m_xview.push_back(abscissa);
+        m_yview.push_back(ordiate);
     }
     else{
         for(int i=0;i<area_limit;++i){
-            xview.swapItemsAt(i,i+1);
-            yview.swapItemsAt(i,i+1);
+            m_xview.swapItemsAt(i,i+1);
+            m_yview.swapItemsAt(i,i+1);
         }
-        int k=xview.size();
-        xview[k-1]=abscissa;
-        yview[k-1]=ordiate;
+        int k=m_xview.size();
+        m_xview[k-1]=abscissa;
+        m_yview[k-1]=ordiate;
     }
-    int n = y.size();
+    int n = m_y.size();
     if(n>=3){
-        if(((y[n-3]-y[n-2])/h>0 && (y[n-2]-y[n-1])/h<0) || ((y[n-3]-y[n-2])/h<0 && (y[n-2]-y[n-1])/h>0)){
-            extremums_x.push_back(abscissa-0.01);
-            extremums_y.push_back(y[n-2]);
-            extremums_xview.push_back(abscissa-0.01);
-            extremums_yview.push_back(y[n-2]);
-            if(extremums_xview.size()==area_limit){
+        if(((m_y[n-3]-m_y[n-2])/h>0 && (m_y[n-2]-m_y[n-1])/h<0) || ((m_y[n-3]-m_y[n-2])/h<0 && (m_y[n-2]-m_y[n-1])/h>0)){
+            m_extremums_x.push_back(abscissa-0.01);
+            m_extremums_y.push_back(m_y[n-2]);
+            m_extremums_xview.push_back(abscissa-0.01);
+            m_extremums_yview.push_back(m_y[n-2]);
+            if(m_extremums_xview.size()==area_limit){
                 for(int i=0;i<area_limit;++i){
-                   extremums_xview.swapItemsAt(i,i+1);
-                    extremums_yview.swapItemsAt(i,i+1);
+                   m_extremums_xview.swapItemsAt(i,i+1);
+                    m_extremums_yview.swapItemsAt(i,i+1);
                 }
-                int j = extremums_xview.size();
-                extremums_xview[j-1]=abscissa-0.01;
-                extremums_yview[j-1]=y[n-2];
+                int j = m_extremums_xview.size();
+                m_extremums_xview[j-1]=abscissa-0.01;
+                m_extremums_yview[j-1]=m_y[n-2];
             }
         }
     }
@@ -43,110 +38,102 @@ void SignalData::add(double abscissa, double ordiate){
 
 void SignalData::clear()
 {
-    x.clear();
-    y.clear();
-    xview.clear();
-    yview.clear();
-    extremums_yview.clear();
-    extremums_xview.clear();
-    extremums_y.clear();
-    extremums_x.clear();
+    m_x.clear();
+    m_y.clear();
+    m_xview.clear();
+    m_yview.clear();
+    m_extremums_yview.clear();
+    m_extremums_xview.clear();
+    m_extremums_y.clear();
+    m_extremums_x.clear();
 }
 
-double SignalData::getAbscissa(int n)
+double SignalData::getAbscissa(int n) const
 {
-    return x[n];
+    return m_x[n];
 }
-double SignalData::getOrdinate(int n)
+double SignalData::getOrdinate(int n) const
 {
-    return y[n];
+    return m_y[n];
 }
-double SignalData::getAbscissaView(int n)
+double SignalData::getAbscissaView(int n) const
 {
-    return xview[n];
+    return m_xview[n];
 }
-double SignalData::getOrdinateView(int n)
+double SignalData::getOrdinateView(int n) const
 {
-    return yview[n];
+    return m_yview[n];
 }
-double SignalData::getExtremumAbscissa(int n)
+double SignalData::getExtremumAbscissa(int n) const
 {
-    return extremums_x[n];
+    return m_extremums_x[n];
 }
-double SignalData::getExtremumOrdinate(int n)
+double SignalData::getExtremumOrdinate(int n) const
 {
-    return extremums_y[n];
+    return m_extremums_y[n];
 }
-double SignalData::getExtremumAbscissaView(int n)
+double SignalData::getExtremumAbscissaView(int n) const
 {
-    return extremums_xview[n];
+    return m_extremums_xview[n];
 }
-double SignalData::getExtremumOrdinateView(int n)
+double SignalData::getExtremumOrdinateView(int n) const
 {
-    return extremums_yview[n];
-}
-
-int SignalData::getAbscissaSize()
-{
-    return x.size();
-}
-int SignalData::getAbscissaViewSize()
-{
-    return xview.size();
-}
-int SignalData::getExtremumAbscissaSize()
-{
-    return extremums_x.size();
-}
-double SignalData::getExtremumAbscissaViewSize()
-{
-    return extremums_xview.size();
+    return m_extremums_yview[n];
 }
 
-void SignalData::copyAbscissa(QVector <double>& newCopy){
-    newCopy.clear();
-    for(int i=0;i<x.size();i++)
-        newCopy.push_back(x[i]);
-}
-void SignalData::copyOrdinate(QVector <double>& newCopy)
+int SignalData::getAbscissaSize() const
 {
-    newCopy.clear();
-    for(int i=0;i<y.size();i++)
-        newCopy.push_back(y[i]);
+    return m_x.size();
 }
-void SignalData::copyAbscissaView(QVector <double>& newCopy)
+int SignalData::getAbscissaViewSize() const
 {
-    newCopy.clear();
-    for(int i=0;i<xview.size();i++)
-        newCopy.push_back(xview[i]);
+    return m_xview.size();
 }
-void SignalData::copyOrdinateView(QVector <double>& newCopy)
+int SignalData::getExtremumAbscissaSize() const
 {
-    newCopy.clear();
-    for(int i=0;i<yview.size();i++)
-        newCopy.push_back(yview[i]);
+    return m_extremums_x.size();
 }
-void SignalData::copyExtremumAbscissa(QVector <double>& newCopy)
+double SignalData::getExtremumAbscissaViewSize() const
 {
-    newCopy.clear();
-    for(int i=0;i<extremums_x.size();i++)
-        newCopy.push_back(extremums_x[i]);
+    return m_extremums_xview.size();
 }
-void SignalData::copyExtremumOrdinate(QVector <double>& newCopy)
+
+QVector<double> SignalData::getOrdinate() const
 {
-    newCopy.clear();
-    for(int i=0;i<extremums_y.size();i++)
-        newCopy.push_back(extremums_y[i]);
+    return m_y;
 }
-void SignalData::copyExtremumAbscissaView(QVector <double>& newCopy)
+
+QVector<double> SignalData::getAbscissaView() const
 {
-    newCopy.clear();
-    for(int i=0;i<extremums_xview.size();i++)
-        newCopy.push_back(extremums_xview[i]);
+    return m_xview;
 }
-void SignalData::copyExtremumOrdinateView(QVector <double>& newCopy)
+
+QVector<double> SignalData::getOrdinateView() const
 {
-    newCopy.clear();
-    for(int i=0;i<extremums_yview.size();i++)
-        newCopy.push_back(extremums_yview[i]);
+    return m_yview;
+}
+
+QVector<double> SignalData::getExtremumAbscissa() const
+{
+    return m_extremums_x;
+}
+
+QVector<double> SignalData::getExtremumOrdinate() const
+{
+    return m_extremums_y;
+}
+
+QVector<double> SignalData::getExtremumAbscissaView() const
+{
+    return m_extremums_xview;
+}
+
+QVector<double> SignalData::getExtremumOrdinateView() const
+{
+    return m_extremums_yview;
+}
+
+QVector<double> SignalData::getAbscisa() const
+{
+    return m_x;
 }

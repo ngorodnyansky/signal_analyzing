@@ -3,33 +3,32 @@
 
 class SignalData
 {
+public:
+    void add(double abscissa, double ordiate);
+    double getAbscissa(int n) const;
+    double getOrdinate(int n) const;
+    double getAbscissaView(int n) const;
+    double getOrdinateView(int n) const;
+    double getExtremumAbscissa(int n) const;
+    double getExtremumOrdinate(int n) const;
+    double getExtremumAbscissaView(int n) const;
+    double getExtremumOrdinateView(int n) const;
+    int getAbscissaSize() const;
+    int getAbscissaViewSize() const;
+    int getExtremumAbscissaSize() const;
+    double getExtremumAbscissaViewSize() const;
+    QVector <double> getAbscisa() const;
+    QVector <double> getOrdinate() const;
+    QVector <double> getAbscissaView() const;
+    QVector <double> getOrdinateView() const;
+    QVector <double> getExtremumAbscissa() const;
+    QVector <double> getExtremumOrdinate() const;
+    QVector <double> getExtremumAbscissaView() const;
+    QVector <double> getExtremumOrdinateView() const;
+    void clear();
 private:
     double h=0.01;
     int area_limit=5/h;
-    QVector <double> x,y,xview, yview, extremums_x, extremums_y, extremums_xview, extremums_yview;
-public:
-    void add(double abscissa, double ordiate);
-    double getAbscissa(int n);
-    double getOrdinate(int n);
-    double getAbscissaView(int n);
-    double getOrdinateView(int n);
-    double getExtremumAbscissa(int n);
-    double getExtremumOrdinate(int n);
-    double getExtremumAbscissaView(int n);
-    double getExtremumOrdinateView(int n);
-    int getAbscissaSize();
-    int getAbscissaViewSize();
-    int getExtremumAbscissaSize();
-    double getExtremumAbscissaViewSize();
-    void copyAbscissa(QVector <double>& newCopy);
-    void copyOrdinate(QVector <double>& newCopy);
-    void copyAbscissaView(QVector <double>& newCopy);
-    void copyOrdinateView(QVector <double>& newCopy);
-    void copyExtremumAbscissa(QVector <double>& newCopy);
-    void copyExtremumOrdinate(QVector <double>& newCopy);
-    void copyExtremumAbscissaView(QVector <double>& newCopy);
-    void copyExtremumOrdinateView(QVector <double>& newCopy);
-    SignalData();
-    void clear();
+    QVector <double> m_x,m_y,m_xview, m_yview, m_extremums_x, m_extremums_y, m_extremums_xview, m_extremums_yview;
 };
 

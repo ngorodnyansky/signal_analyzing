@@ -1,10 +1,5 @@
 #include "dataio.h"
 
-DataIO::DataIO()
-{
-
-}
-
 void DataIO::save(SignalData& data)
 {   QMessageBox *pmbx;
     QString saveName = QFileDialog::getSaveFileName(0, "Выбор папки","/home/untitled.txt","* .txt");
@@ -21,32 +16,32 @@ void DataIO::save(SignalData& data)
     }
     else{
         for(int i=0;i<data.getAbscissaSize();++i){
-            this->ordinate.push_back(data.getOrdinate(i));
-            this->abscissa.push_back(data.getAbscissa(i));
+            m_ordinate.push_back(data.getOrdinate(i));
+            m_abscissa.push_back(data.getAbscissa(i));
         }
         for(int i=0;i<data.getAbscissaViewSize();++i){
-            this->viewOrdinate.push_back(data.getOrdinateView(i));
-            this->viewAbscissa.push_back(data.getAbscissaView(i));
+            m_viewOrdinate.push_back(data.getOrdinateView(i));
+            m_viewAbscissa.push_back(data.getAbscissaView(i));
         }
         for(int i=0;i<data.getExtremumAbscissaSize();++i){
-            this->pointOrdinate.push_back(data.getExtremumOrdinate(i));
-            this->pointAbscissa.push_back(data.getExtremumAbscissa(i));
+            m_pointOrdinate.push_back(data.getExtremumOrdinate(i));
+            m_pointAbscissa.push_back(data.getExtremumAbscissa(i));
         }
         for(int i=0;i<data.getExtremumAbscissaViewSize();++i){
-            this->viewPointOrdinate.push_back(data.getExtremumOrdinateView(i));
-            this->viewPointAbscissa.push_back(data.getExtremumAbscissaView(i));
+            m_viewPointOrdinate.push_back(data.getExtremumOrdinateView(i));
+            m_viewPointAbscissa.push_back(data.getExtremumAbscissaView(i));
         }
 
         QDataStream out(&saveFile);
-           out << this->ordinate << this->abscissa << this->viewOrdinate << this->viewAbscissa;
-           out << this->pointOrdinate << this->pointAbscissa << this->viewPointOrdinate << this->viewPointAbscissa;
+           out << m_ordinate << m_abscissa << m_viewOrdinate << m_viewAbscissa;
+           out << m_pointOrdinate << m_pointAbscissa << m_viewPointOrdinate << m_viewPointAbscissa;
         saveFile.close();
     }
 }
 
 QDataStream &operator>>(QDataStream &in, DataIO &openGraph){
-    in >> openGraph.ordinate >> openGraph.abscissa >> openGraph.viewOrdinate >> openGraph.viewAbscissa;
-    in >> openGraph.pointOrdinate >> openGraph.pointAbscissa >> openGraph.viewPointOrdinate >> openGraph.viewPointAbscissa;
+    in >> openGraph.m_ordinate >> openGraph.m_abscissa >> openGraph.m_viewOrdinate >> openGraph.m_viewAbscissa;
+    in >> openGraph.m_pointOrdinate >> openGraph.m_pointAbscissa >> openGraph.m_viewPointOrdinate >> openGraph.m_viewPointAbscissa;
     return in;
 }
 
@@ -73,8 +68,8 @@ void DataIO::open(SignalData &data)
             in >> open;
             openFile.close();
 
-        for(int i=0;i<open.ordinate.size();++i){
-            data.add(open.abscissa[i],open.ordinate[i]);
+        for(int i=0;i<open.m_ordinate.size();++i){
+            data.add(open.m_abscissa[i],open.m_ordinate[i]);
         }
     }
 }

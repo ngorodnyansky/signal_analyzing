@@ -8,5 +8,3 @@ public:
     void readSettings(viewSetting& data);
     void writeSettings(const viewSetting& data);
 };
-
-
