@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
         connect(socket,SIGNAL(readyRead()),this,SLOT(sockReady()));
         connect(socket,SIGNAL(disconnected()),this,SLOT(sockDisc()));
-        settings.readSettings(setting_window);
+        settings.readSettings();
         ui->amplitude_Slider->setRange(1,50);
         ui->amplitude_Slider->setValue(amplitude);
         ui->frequency_Slider->setRange(5,40);
@@ -22,13 +22,13 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->widget->xAxis->setRange(xBegin,xEnd);
         ui->widget->yAxis->setRange(-5,5);
 
-        if(setting_window.background_color==1){
+        if(settings.getBackgroundColor()==1){
             ui->widget->setBackground(Qt::white);
         }
-        else if(setting_window.background_color==2){
+        else if(settings.getBackgroundColor()==2){
             ui->widget->setBackground(Qt::gray);
         }
-        else if(setting_window.background_color==3){
+        else if(settings.getBackgroundColor()==3){
             ui->widget->setBackground(Qt::red);
         }
         else ui->widget->setBackground(Qt::blue);
@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    settings.writeSettings(setting_window);
+    settings.writeSettings();
     delete ui;
 }
 
@@ -57,8 +57,8 @@ void MainWindow::sockDisc()
 
 void MainWindow::sockReady()
 {
-    QColor lineColor(setting_window.red,setting_window.green,setting_window.blue);
-    QColor pointsColor(setting_window.redPoints,setting_window.greenPoints,setting_window.bluePoints);
+    QColor lineColor(settings.getRed(),settings.getGreen(),settings.getBlue());
+    QColor pointsColor(settings.getRedPoints(),settings.getGreenPoints(),settings.getBluePoints());
     ui->widget->setInteraction(QCP::iRangeDrag, false);
     ui->widget->setInteraction(QCP::iRangeZoom, false);
     Data = socket->readAll();
@@ -86,17 +86,17 @@ void MainWindow::sockReady()
         ui->widget->yAxis->setRange(-5,5);
 
         ui->widget->addGraph();
-        ui->widget->graph(0)->setPen(QPen(lineColor,setting_window.size_line));
+        ui->widget->graph(0)->setPen(QPen(lineColor,settings.getSizeLine()));
         ui->widget->graph(0)->addData(allData.getAbscisa(),allData.getOrdinate());
 
 
 
 
-        if(!setting_window.antialiasing)
+        if(!settings.getAntialiasing())
             ui->widget->graph(0)->setAntialiased(false);
-        if(setting_window.viewPoints){
+        if(settings.getViewPoints()){
             ui->widget->addGraph();
-            ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
+            ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, settings.getSizePoints()));
             ui->widget->graph(1)->setPen(pointsColor);
             ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
             ui->widget->graph(1)->addData(allData.getExtremumAbscissa(),allData.getExtremumOrdinate());
@@ -110,15 +110,15 @@ void MainWindow::sockReady()
         ui->widget->yAxis->setRange(-5,5);
 
         ui->widget->addGraph();
-        ui->widget->graph(0)->setPen(QPen(lineColor,setting_window.size_line));
+        ui->widget->graph(0)->setPen(QPen(lineColor,settings.getSizeLine()));
         ui->widget->graph(0)->addData(allData.getAbscissaView(),allData.getOrdinateView());
 
-        if(!setting_window.antialiasing)
+        if(!settings.getAntialiasing())
             ui->widget->graph(0)->setAntialiased(false);
 
-        if(setting_window.viewPoints){
+        if(settings.getViewPoints()){
             ui->widget->addGraph();
-            ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
+            ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, settings.getSizePoints()));
             ui->widget->graph(1)->setPen(pointsColor);
             ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
             ui->widget->graph(1)->addData(allData.getExtremumAbscissa(),allData.getExtremumOrdinate());
@@ -153,7 +153,7 @@ void MainWindow::on_connectButton_clicked()
 
 void MainWindow::on_disconnectButton_clicked()
 {
-    QColor color(setting_window.red,setting_window.green,setting_window.blue);
+    QColor color(settings.getRed(),settings.getGreen(),settings.getBlue());
     ui->widget->setInteraction(QCP::iRangeDrag, true);
     ui->widget->setInteraction(QCP::iRangeZoom, true);
 
@@ -165,15 +165,15 @@ void MainWindow::on_disconnectButton_clicked()
     ui->widget->yAxis->setRange(-5,5);
 
     ui->widget->addGraph();
-    ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
+    ui->widget->graph(0)->setPen(QPen(color,settings.getSizeLine()));
     ui->widget->graph(0)->addData(allData.getAbscisa(),allData.getOrdinate());
 
-    if(!setting_window.antialiasing)
+    if(!settings.getAntialiasing())
         ui->widget->graph(0)->setAntialiased(false);
-    if(setting_window.viewPoints){
-        QColor pointsColor(setting_window.redPoints,setting_window.greenPoints,setting_window.bluePoints);
+    if(settings.getViewPoints()){
+        QColor pointsColor(settings.getRedPoints(),settings.getGreenPoints(),settings.getBluePoints());
         ui->widget->addGraph();
-        ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
+        ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, settings.getSizePoints()));
         ui->widget->graph(1)->setPen(pointsColor);
         ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
         ui->widget->graph(1)->addData(allData.getExtremumAbscissa(),allData.getExtremumOrdinate());
@@ -192,36 +192,38 @@ void MainWindow::on_disconnectButton_clicked()
 
 void MainWindow::on_SettingAction_triggered()
 {
+
+    viewSetting setting_window(settings);
     setting_window.setModal(true);
-    setting_window.updateValue();
+    setting_window.updateValue(settings);
     setting_window.exec();
-    QColor color(setting_window.red,setting_window.green,setting_window.blue);
+    QColor color((settings.getRed(),settings.getGreen(),settings.getBlue()));
 
     ui->widget->xAxis->setRange(xBegin+time-5,xEnd+time-5);
     ui->widget->yAxis->setRange(-5,5);
 
     ui->widget->addGraph();
-    ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
+    ui->widget->graph(0)->setPen(QPen(color,settings.getSizeLine()));
     ui->widget->graph(0)->addData(allData.getAbscisa(),allData.getOrdinate());
 
-    if(!setting_window.antialiasing)
+    if(!settings.getAntialiasing())
         ui->widget->graph(0)->setAntialiased(false);
-    if(setting_window.viewPoints){
-        QColor pointsColor(setting_window.redPoints,setting_window.greenPoints,setting_window.bluePoints);
+    if(settings.getViewPoints()){
+        QColor pointsColor(settings.getRedPoints(),settings.getGreenPoints(),settings.getBluePoints());
         ui->widget->addGraph();
-        ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
+        ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, settings.getSizePoints()));
         ui->widget->graph(1)->setPen(pointsColor);
         ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
         ui->widget->graph(1)->addData(allData.getExtremumAbscissa(),allData.getExtremumOrdinate());
     }
 
-    if(setting_window.background_color==1){
+    if(settings.getBackgroundColor()==1){
         ui->widget->setBackground(Qt::white);
     }
-    else if(setting_window.background_color==2){
+    else if(settings.getBackgroundColor()==2){
         ui->widget->setBackground(Qt::gray);
     }
-    else if(setting_window.background_color==3){
+    else if(settings.getBackgroundColor()==3){
         ui->widget->setBackground(Qt::red);
     }
     else ui->widget->setBackground(Qt::blue);
@@ -283,7 +285,7 @@ void MainWindow::on_action_open_triggered()
                    fileWork.open(allData);
 
 
-                       QColor color(setting_window.red,setting_window.green,setting_window.blue);
+                       QColor color(settings.getRed(),settings.getGreen(),settings.getBlue());
                        ui->widget->clearGraphs();
                        ui->widget->setInteraction(QCP::iRangeDrag, true);
                        ui->widget->setInteraction(QCP::iRangeZoom, true);
@@ -292,16 +294,16 @@ void MainWindow::on_action_open_triggered()
                        ui->widget->yAxis->setRange(-5,5);
 
                        ui->widget->addGraph();
-                       ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
+                       ui->widget->graph(0)->setPen(QPen(color,settings.getSizeLine()));
                        ui->widget->graph(0)->addData(allData.getAbscisa(),allData.getOrdinate());
 
-                       if(!setting_window.antialiasing)
+                       if(!settings.getAntialiasing())
                            ui->widget->graph(0)->setAntialiased(false);
 
-                       if(setting_window.viewPoints){
-                           QColor pointsColor(setting_window.redPoints,setting_window.greenPoints,setting_window.bluePoints);
+                       if(settings.getViewPoints()){
+                           QColor pointsColor(settings.getRedPoints(),settings.getGreenPoints(),settings.getBluePoints());
                            ui->widget->addGraph();
-                           ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
+                           ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, settings.getSizePoints()));
                            ui->widget->graph(1)->setPen(pointsColor);
                            ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
                            ui->widget->graph(1)->addData(allData.getExtremumAbscissaView(),allData.getExtremumOrdinateView());
@@ -320,7 +322,7 @@ void MainWindow::on_action_open_triggered()
 
             fileWork.open(allData);
 
-            QColor color(setting_window.red,setting_window.green,setting_window.blue);
+            QColor color(settings.getRed(),settings.getGreen(),settings.getBlue());
             ui->widget->clearGraphs();
             ui->widget->setInteraction(QCP::iRangeDrag, true);
             ui->widget->setInteraction(QCP::iRangeZoom, true);
@@ -329,16 +331,16 @@ void MainWindow::on_action_open_triggered()
             ui->widget->yAxis->setRange(-5,5);
 
             ui->widget->addGraph();
-            ui->widget->graph(0)->setPen(QPen(color,setting_window.size_line));
+            ui->widget->graph(0)->setPen(QPen(color,settings.getSizeLine()));
             ui->widget->graph(0)->addData(allData.getAbscisa(),allData.getOrdinate());
 
-            if(!setting_window.antialiasing)
+            if(!settings.getAntialiasing())
                 ui->widget->graph(0)->setAntialiased(false);
 
-            if(setting_window.viewPoints){
-                QColor pointsColor(setting_window.redPoints,setting_window.greenPoints,setting_window.bluePoints);
+            if(settings.getViewPoints()){
+                QColor pointsColor(settings.getRedPoints(),settings.getGreenPoints(),settings.getBluePoints());
                 ui->widget->addGraph();
-                ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, setting_window.size_points));
+                ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, settings.getSizePoints()));
                 ui->widget->graph(1)->setPen(pointsColor);
                 ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
                 ui->widget->graph(1)->addData(allData.getExtremumAbscissaView(),allData.getExtremumOrdinateView());
