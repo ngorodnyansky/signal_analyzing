@@ -1,10 +1,12 @@
 #pragma once
 
+#include <QColor>
 #include <QSettings>
 
 class Settings
 {
 public:
+    Settings();
     void readSettings();
     void writeSettings();
     int getRed() const;
@@ -18,19 +20,17 @@ public:
     int getSizePoints() const;
     bool getAntialiasing() const;
     bool getViewPoints() const;
-    void setRed(int r);
-    void setGreen(int g);
-    void setBlue(int b);
+    void setLineColor(int r,int g, int b);
+    void setPointColor(int r,int g,int b);
     void setSizeLine(int sizeLine);
     void setBackgroundColor(int backColor);
-    void setRedPoints(int rP);
-    void setGreenPoints(int gP);
-    void setBluePoints(int bP);
     void setSizePoints(int sizePopints);
     void setAntialiasing(bool antialiasing);
     void setViewPoints(bool viewPoints);
+    QColor getLineColor() const;
+    QColor getPointColor() const;
 private:
-    int m_red=0, m_green=0, m_blue=0, m_size_line=1, m_background_color=1;
-    int m_redPoints=0, m_greenPoints=0, m_bluePoints=0, m_size_points=4;
-    bool m_antialiasing=1, m_viewPoints=1;
+    QColor m_lineColor,m_pointColor;
+    int  m_size_line, m_background_color, m_size_points;
+    bool m_antialiasing, m_viewPoints;
 };

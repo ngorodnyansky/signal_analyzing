@@ -63,50 +63,32 @@ void viewSetting::on_cancel_clicked()
     this->close();
 }
 
-
-
 void viewSetting::on_apply_clicked()
 {
     if(ui->dark_radioButton->isChecked()){
-        settings.setRed(0);
-        settings.setGreen(0);
-        settings.setBlue(0);
+        settings.setLineColor(0,0,0);
     }
     else if(ui->red_radioButton->isChecked()){
-        settings.setRed(255);
-        settings.setGreen(0);
-        settings.setBlue(0);
+        settings.setLineColor(255,0,0);
     }
     else if(ui->green_radioButton->isChecked()){
-        settings.setRed(0);
-        settings.setGreen(255);
-        settings.setBlue(0);
+        settings.setLineColor(0,255,0);
     }
     else{
-        settings.setRed(0);
-        settings.setGreen(200);
-        settings.setBlue(255);
+        settings.setLineColor(0,200,255);
     }
 
     if(ui->darkPoints_radioButton->isChecked()){
-        settings.setRedPoints(0);
-        settings.setGreenPoints(0);
-        settings.setBluePoints(0);
+        settings.setPointColor(0,0,0);
     }
     else if(ui->whitePoints_radioButton->isChecked()){
-        settings.setRedPoints(255);
-        settings.setGreenPoints(255);
-        settings.setBluePoints(255);
+        settings.setPointColor(255,255,255);
     }
     else if(ui->bluePoints_radioButton->isChecked()){
-        settings.setRedPoints(0);
-        settings.setGreenPoints(200);
-        settings.setBluePoints(255);
+        settings.setPointColor(0,200,255);
     }
     else {
-        settings.setRedPoints(255);
-        settings.setGreenPoints(0);
-        settings.setBluePoints(0);
+        settings.setPointColor(255,0,0);
     }
 
 
