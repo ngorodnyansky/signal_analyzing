@@ -11,7 +11,7 @@ class Thread : public QThread
 public:
     explicit Thread(qintptr ID, QObject *parent = 0);
     double amplitude=1;
-    int speed = 90000;
+    int frequency = 10;
     void run();
 
 signals:

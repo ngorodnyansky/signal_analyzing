@@ -33,14 +33,14 @@ void Thread::readyRead()
     QDataStream in(socket);
     in >> clientData;
     amplitude=clientData[1]*0.1;
-    speed=clientData[2];
+    frequency=clientData[2];
     double xBegin=clientData[0], X=xBegin, data=0;
     if(X==6.28){
         X=0;
     }
     bool connected = (socket->state() == QTcpSocket::ConnectedState);
     if(connected){
-    data=amplitude*sin(X*0.2*3.14159265*speed);
+    data=amplitude*sin(X*0.2*3.14159265*frequency);
     socket->write(QByteArray::fromStdString(QVariant(data).toString().toStdString()));
     socket->waitForBytesWritten();
     QThread::currentThread()->usleep(50000);

@@ -24,10 +24,8 @@ void MyTcpServer::incomingConnection(qintptr socketDescriptor)
 {
     qDebug() << socketDescriptor << " Connecting...";
 
-    // Every new connection will be run in a newly created thread
     Thread *thread = new Thread(socketDescriptor, this);
 
-    // connect signal/slot
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
     thread->start();
