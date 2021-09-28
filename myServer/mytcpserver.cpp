@@ -1,9 +1,16 @@
 #include "mytcpserver.h"
 #include <QDebug>
 #include "thread.h"
+#include <QFile>
 
 MyTcpServer::MyTcpServer(QObject *parent) : QTcpServer(parent)
 {
+}
+
+MyTcpServer::MyTcpServer(QString fileName)
+{
+    qDebug()<<fileName;
+
 }
 
 void MyTcpServer::startServer()

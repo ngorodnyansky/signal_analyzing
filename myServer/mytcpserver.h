@@ -13,6 +13,7 @@ class MyTcpServer : public QTcpServer
     Q_OBJECT
 public:
     explicit MyTcpServer(QObject *parent = 0);
+    MyTcpServer(QString fileName);
     void startServer();
 
 protected:
