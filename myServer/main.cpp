@@ -22,13 +22,13 @@ int main(int argc, char *argv[])
     parser.process(a);
     if (filename.isNull())
     {
-        MyTcpServer server;
+        GenerationServer server;
         server.startServer();
         return a.exec();
     }
     else
     {
-        MyTcpServer server(filename);
+        GenerationServer server;
         server.startServer();
         return a.exec();
     }

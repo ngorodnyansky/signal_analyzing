@@ -3,15 +3,6 @@
 #include "thread.h"
 #include <QFile>
 
-MyTcpServer::MyTcpServer(QObject *parent) : QTcpServer(parent)
-{
-}
-
-MyTcpServer::MyTcpServer(QString fileName)
-{
-    qDebug()<<fileName;
-
-}
 
 void MyTcpServer::startServer()
 {
@@ -27,7 +18,11 @@ void MyTcpServer::startServer()
     }
 }
 
-void MyTcpServer::incomingConnection(qintptr socketDescriptor)
+
+
+
+
+void GenerationServer::incomingConnection(qintptr socketDescriptor)
 {
     qDebug() << socketDescriptor << " Connecting...";
 
@@ -37,12 +32,3 @@ void MyTcpServer::incomingConnection(qintptr socketDescriptor)
 
     thread->start();
 }
-
-
-
-
-
-
-
-
-
