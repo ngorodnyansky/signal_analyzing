@@ -7,18 +7,13 @@
 #include <QDebug>
 #include <QCoreApplication>
 #include <QThread>
+#include "controller.h"
 
 class MyTcpServer : public QTcpServer
 {
+    Q_OBJECT
 public:
     void startServer();
-    virtual void incomingConnection(qintptr socketDescriptor)=0;
-};
-class GenerationServer : public MyTcpServer
-{
-    Q_OBJECT
-protected:
-    void incomingConnection(qintptr socketDescriptor);
 };
 
 
