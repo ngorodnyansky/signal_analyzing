@@ -1,5 +1,6 @@
 #pragma once
 #include <QMainWindow>
+#include <QShortcut>
 #include <QMessageBox>
 #include <QDebug>
 #include <QTcpSocket>
@@ -20,15 +21,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    QTcpSocket* socket;
-    QByteArray Data;
-    QVector<double> dataToServer;
-    double xBegin=0, xEnd=0, h=0.01, X=0, time=0,amplitude=20,frequency=10;
-    int area_limit=5/h;
-    Settings settings;
-    SignalData allData;
-    DataIO fileWork;
-
 public slots:
     void sockReady();
     void sockDisc();
@@ -42,6 +34,18 @@ private slots:
 
     void on_action_open_triggered();
 
+    void on_pushButton_2_clicked();
+
+    void on_plus_clicked();
+
 private:
     Ui::MainWindow *ui;
+    QTcpSocket* socket;
+    QByteArray Data;
+    QVector<double> dataToServer;
+    double xBegin=0, xEnd=0, h=0.01, X=0, time=0,amplitude=20,frequency=10,verticalPlus=0;
+    int area_limit=5/h;
+    Settings settings;
+    SignalData allData;
+    DataIO fileWork;
 };

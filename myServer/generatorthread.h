@@ -1,17 +1,13 @@
 #pragma once
-
 #include <QThread>
 #include <QTcpSocket>
-#include <QDebug>
-#include <QDataStream>
 
-class Thread : public QThread
+
+class GeneratorThread:public QThread
 {
     Q_OBJECT
 public:
-    explicit Thread(qintptr ID, QObject *parent = 0);
-    double amplitude=1;
-    int frequency = 10;
+    explicit GeneratorThread(qintptr ID, QObject *parent = 0);
     void run();
 
 signals:
@@ -22,8 +18,9 @@ public slots:
     void disconnected();
 
 private:
+    double amplitude=1;
+    int frequency = 10;
     QTcpSocket *socket;
     qintptr socketDescriptor;
 };
-
 

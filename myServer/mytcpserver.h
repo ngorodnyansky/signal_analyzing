@@ -7,17 +7,26 @@
 #include <QDebug>
 #include <QCoreApplication>
 #include <QThread>
+#include <QString>
 
 class MyTcpServer : public QTcpServer
 {
-    Q_OBJECT
 public:
-    explicit MyTcpServer(QObject *parent = 0);
+    explicit MyTcpServer(const QString& dataFileName);
     void startServer();
 
 protected:
     void incomingConnection(qintptr socketDescriptor);
+    QString m_dataFileName;
 };
+class GenerationServer : public MyTcpServer
+{
+    Q_OBJECT
+protected:
+    void incomingConnection(qintptr socketDescriptor);
+};
+
+
 
 
 

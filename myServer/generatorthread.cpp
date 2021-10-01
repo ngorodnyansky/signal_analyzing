@@ -1,12 +1,13 @@
-#include "thread.h"
+#include "generatorthread.h"
+#include <QDataStream>
 
-Thread::Thread(qintptr ID, QObject *parent) :
+GeneratorThread::GeneratorThread(qintptr ID, QObject *parent) :
     QThread(parent)
 {
     this->socketDescriptor = ID;
 }
 
-void Thread::run()
+void GeneratorThread::run()
 {
     qDebug() << " Thread started";
 
@@ -27,7 +28,7 @@ void Thread::run()
     exec();
 }
 
-void Thread::readyRead()
+void GeneratorThread::readyRead()
 {
     QVector<double> clientData;
     QDataStream in(socket);
@@ -47,9 +48,8 @@ void Thread::readyRead()
     }
 }
 
-void Thread::disconnected()
+void GeneratorThread::disconnected()
 {
     qDebug() << socketDescriptor << " Disconnected";
-    socket->deleteLater();
     exit(0);
 }
