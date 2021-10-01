@@ -2,6 +2,7 @@
 #include "mytcpserver.h"
 #include <QCommandLineParser>
 
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -15,21 +16,13 @@ int main(int argc, char *argv[])
 
     parser.addPositionalArgument("filename", "The name of the file to be streamed");
 
-    parser.parse(QCoreApplication::arguments());
+    parser.process(a);
 
     const QStringList args = parser.positionalArguments();
     const QString filename = args.isEmpty() ? QString() : args.first();
-    parser.process(a);
-    if (filename.isNull())
-    {
-        GenerationServer server;
-        server.startServer();
-        return a.exec();
-    }
-    else
-    {
-        GenerationServer server;
-        server.startServer();
-        return a.exec();
-    }
+
+    MyTcpServer server(filename);
+    server.startServer();
+    return a.exec();
+
 }

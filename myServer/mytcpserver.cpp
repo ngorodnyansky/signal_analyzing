@@ -1,8 +1,13 @@
 #include "mytcpserver.h"
 #include <QDebug>
-#include "thread.h"
-#include <QFile>
+#include "generatorthread.h"
+#include "translatorthread.h"
 
+
+MyTcpServer::MyTcpServer(const QString& dataFileName)
+    :m_dataFileName(dataFileName)
+{
+}
 
 void MyTcpServer::startServer()
 {
@@ -18,17 +23,22 @@ void MyTcpServer::startServer()
     }
 }
 
-
-
-
-
-void GenerationServer::incomingConnection(qintptr socketDescriptor)
+void MyTcpServer::incomingConnection(qintptr socketDescriptor)
 {
     qDebug() << socketDescriptor << " Connecting...";
 
-    Thread *thread = new Thread(socketDescriptor, this);
-
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    QThread* thread = Q_NULLPTR;
+    if(!m_dataFileName.isEmpty())
+        thread = new TranslatorThread(m_dataFileName, socketDescriptor, this);
+    else
+        thread = new GeneratorThread(socketDescriptor, this);
 
     thread->start();
+
 }
+
+
+
+
+
+
