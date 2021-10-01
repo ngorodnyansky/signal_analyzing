@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
         xEnd = 5;
 
         ui->widget->xAxis->setRange(xBegin,xEnd);
-        ui->widget->yAxis->setRange(-5,5);
+        ui->widget->yAxis->setRange(-5-verticalPlus,5+verticalPlus);
 
         if(settings.getBackgroundColor()==1){
             ui->widget->setBackground(Qt::white);
@@ -81,7 +81,7 @@ void MainWindow::sockReady()
     ui->widget->clearGraphs();
     if(time<=5){
         ui->widget->xAxis->setRange(xBegin,xEnd);
-        ui->widget->yAxis->setRange(-5,5);
+        ui->widget->yAxis->setRange(-5-verticalPlus,5+verticalPlus);
 
         ui->widget->addGraph();
         ui->widget->graph(0)->setPen(QPen(settings.getLineColor(),settings.getSizeLine()));
@@ -105,7 +105,7 @@ void MainWindow::sockReady()
     }
     else{
         ui->widget->xAxis->setRange(xBegin+time-5,xEnd+time-5);
-        ui->widget->yAxis->setRange(-5,5);
+        ui->widget->yAxis->setRange(-5-verticalPlus,5+verticalPlus);
 
         ui->widget->addGraph();
         ui->widget->graph(0)->setPen(QPen(settings.getLineColor(),settings.getSizeLine()));
@@ -159,7 +159,7 @@ void MainWindow::on_disconnectButton_clicked()
     }
     else ui->widget->xAxis->setRange(xBegin,xEnd);
 
-    ui->widget->yAxis->setRange(-5,5);
+    ui->widget->yAxis->setRange(-5-verticalPlus,5+verticalPlus);
 
     ui->widget->addGraph();
     ui->widget->graph(0)->setPen(QPen(settings.getLineColor(),settings.getSizeLine()));
@@ -196,7 +196,7 @@ void MainWindow::on_SettingAction_triggered()
     setting_window.exec();
 
     ui->widget->xAxis->setRange(xBegin+time-5,xEnd+time-5);
-    ui->widget->yAxis->setRange(-5,5);
+    ui->widget->yAxis->setRange(-5-verticalPlus,5+verticalPlus);
 
     ui->widget->addGraph();
     ui->widget->graph(0)->setPen(QPen(settings.getLineColor(),settings.getSizeLine()));
@@ -284,7 +284,7 @@ void MainWindow::on_action_open_triggered()
                        ui->widget->setInteraction(QCP::iRangeZoom, true);
 
                        ui->widget->xAxis->setRange(xBegin,xEnd);
-                       ui->widget->yAxis->setRange(-5,5);
+                       ui->widget->yAxis->setRange(-5-verticalPlus,5+verticalPlus);
 
                        ui->widget->addGraph();
                        ui->widget->graph(0)->setPen(QPen(settings.getLineColor(),settings.getSizeLine()));
@@ -319,7 +319,7 @@ void MainWindow::on_action_open_triggered()
             ui->widget->setInteraction(QCP::iRangeZoom, true);
 
             ui->widget->xAxis->setRange(xBegin,xEnd);
-            ui->widget->yAxis->setRange(-5,5);
+            ui->widget->yAxis->setRange(-5-verticalPlus,5+verticalPlus);
 
             ui->widget->addGraph();
             ui->widget->graph(0)->setPen(QPen(settings.getLineColor(),settings.getSizeLine()));
@@ -343,5 +343,20 @@ void MainWindow::on_action_open_triggered()
 
     }
 
+}
+
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    if(verticalPlus!=0)
+    {
+        verticalPlus-=10;
+    }
+}
+
+
+void MainWindow::on_plus_clicked()
+{
+    verticalPlus+=10;
 }
 
