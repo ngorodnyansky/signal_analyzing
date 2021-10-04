@@ -35,6 +35,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
         ui->disconnectButton->setEnabled(false);
         ui->disconnectButton->repaint();
+
+        keyCtrlPlus = new QShortcut(this);
+        keyCtrlPlus->setKey(Qt::CTRL + Qt::Key_Plus);
+        connect(keyCtrlPlus, SIGNAL(activated()), this, SLOT(on_plus_clicked()));
+
+        keyCtrlMinus = new QShortcut(this);
+        keyCtrlMinus->setKey(Qt::CTRL + Qt::Key_Minus);
+        connect(keyCtrlMinus, SIGNAL(activated()), this, SLOT(on_pushButton_2_clicked()));
 }
 
 MainWindow::~MainWindow()

@@ -35,7 +35,6 @@ private slots:
     void on_action_open_triggered();
 
     void on_pushButton_2_clicked();
-
     void on_plus_clicked();
 
 private:
@@ -48,4 +47,5 @@ private:
     Settings settings;
     SignalData allData;
     DataIO fileWork;
+    QShortcut       *keyCtrlPlus,*keyCtrlMinus;
 };
