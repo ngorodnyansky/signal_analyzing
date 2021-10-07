@@ -34,9 +34,8 @@ private slots:
 
     void on_action_open_triggered();
 
-    void on_pushButton_2_clicked();
-    void on_plus_clicked();
-
+protected:
+    void wheelEvent(QWheelEvent *event) override;
 private:
     Ui::MainWindow *ui;
     QTcpSocket* socket;

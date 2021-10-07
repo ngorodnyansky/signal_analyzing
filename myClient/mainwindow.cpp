@@ -35,14 +35,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
         ui->disconnectButton->setEnabled(false);
         ui->disconnectButton->repaint();
-
-        keyCtrlPlus = new QShortcut(this);
-        keyCtrlPlus->setKey(Qt::CTRL + Qt::Key_Plus);
-        connect(keyCtrlPlus, SIGNAL(activated()), this, SLOT(on_plus_clicked()));
-
-        keyCtrlMinus = new QShortcut(this);
-        keyCtrlMinus->setKey(Qt::CTRL + Qt::Key_Minus);
-        connect(keyCtrlMinus, SIGNAL(activated()), this, SLOT(on_pushButton_2_clicked()));
 }
 
 MainWindow::~MainWindow()
@@ -354,17 +346,18 @@ void MainWindow::on_action_open_triggered()
 }
 
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::wheelEvent(QWheelEvent *event)
 {
-    if(verticalPlus!=0)
-    {
-        verticalPlus-=10;
-    }
-}
+        QPoint numDegrees= event->angleDelta()/8;
 
+        if(numDegrees.y()>0)
+            verticalPlus+=10;
+        else {
+            if(verticalPlus!=0)
+            {
+                verticalPlus-=10;
+            }
+        }
 
-void MainWindow::on_plus_clicked()
-{
-    verticalPlus+=10;
 }
 
