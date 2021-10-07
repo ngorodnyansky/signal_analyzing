@@ -18,7 +18,7 @@ void SignalData::add(double abscissa, double ordiate){
     }
     int n = m_y.size();
     if(n>=3){
-        if(m_y[n-3]!=m_y[n-2]){
+        if(m_y[n-2]!=m_y[n-1]){
             if(((m_y[n-3]-m_y[n-2])/h>0 && (m_y[n-2]-m_y[n-1])/h<0) || ((m_y[n-3]-m_y[n-2])/h<0 && (m_y[n-2]-m_y[n-1])/h>0)){
                 m_extremums_x.push_back(abscissa-0.01);
                 m_extremums_y.push_back(m_y[n-2]);
@@ -37,7 +37,7 @@ void SignalData::add(double abscissa, double ordiate){
         }
         else
         {
-            if((m_y[n-2]-m_y[n-1])==0 /*&& m_extremums_y[m_extremums_y.size()-1]!=m_y[n-2]*/){
+            if((m_y[n-2]-m_y[n-1])==0){
                 m_extremums_x.push_back(abscissa-0.01);
                 m_extremums_y.push_back(m_y[n-2]);
                 m_extremums_xview.push_back(abscissa-0.01);
