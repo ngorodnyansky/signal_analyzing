@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QTcpSocket>
+#include <QShortcut>
 #include "viewsetting.h"
 #include "signaldata.h"
 #include "dataio.h"
@@ -35,7 +36,7 @@ private slots:
     void on_action_open_triggered();
 
 protected:
-    void wheelEvent(QWheelEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 private:
     Ui::MainWindow *ui;
     QTcpSocket* socket;

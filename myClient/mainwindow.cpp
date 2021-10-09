@@ -346,18 +346,17 @@ void MainWindow::on_action_open_triggered()
 }
 
 
-void MainWindow::wheelEvent(QWheelEvent *event)
+void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-        QPoint numDegrees= event->angleDelta()/8;
 
-        if(numDegrees.y()>0)
-            verticalPlus+=10;
-        else {
-            if(verticalPlus!=0)
-            {
-                verticalPlus-=10;
-            }
+    if (event->key()==61){//61 - код Plus
+        verticalPlus+=10;
+    }
+    else if(event->key()==45){//45 - код Minus
+        if(verticalPlus!=0)
+        {
+            verticalPlus-=10;
         }
-
+    }
 }
 
