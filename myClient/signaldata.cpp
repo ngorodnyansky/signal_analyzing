@@ -70,23 +70,6 @@ void SignalData::add(double abscissa, double ordiate){
             {
                 m_variabl_Sign=m_y[n-3]-m_y[n-2];
             }
-            /*
-            if((m_y[n-2]-m_y[n-1])==0){
-                m_extremums_x.push_back(abscissa-0.01);
-                m_extremums_y.push_back(m_y[n-2]);
-                m_extremums_xview.push_back(abscissa-0.01);
-                m_extremums_yview.push_back(m_y[n-2]);
-                if(m_extremums_xview.size()==area_limit){
-                    for(int i=0;i<area_limit;++i){
-                        m_extremums_xview.swapItemsAt(i,i+1);
-                        m_extremums_yview.swapItemsAt(i,i+1);
-                    }
-                    int j = m_extremums_xview.size();
-                    m_extremums_xview[j-1]=abscissa-0.01;
-                    m_extremums_yview[j-1]=m_y[n-2];
-                }
-            }
-            */
         }
     }
 }
