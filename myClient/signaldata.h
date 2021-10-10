@@ -27,6 +27,7 @@ public:
     QVector <double> getExtremumOrdinateView() const;
     void clear();
 private:
+    int m_variabl_Sign=0;
     double h=0.01;
     int area_limit=5/h;
     QVector <double> m_x,m_y,m_xview, m_yview, m_extremums_x, m_extremums_y, m_extremums_xview, m_extremums_yview;
